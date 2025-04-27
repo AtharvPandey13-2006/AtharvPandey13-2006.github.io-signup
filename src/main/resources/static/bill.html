@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-hindi="बिल" data-english="Bill">बिल</title>
+    <link rel="stylesheet" href="bill_style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .print-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(27, 16, 234, 0.4);
+        }
+
+        .buy-button-container {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            text-align: center;
+            display: flex;
+            gap: 20px;
+        }
+
+        .buy-button,
+        .return-button {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 8px 20px rgba(46, 204, 113, 0.3);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .return-button {
+            background: linear-gradient(135deg, #1b10ea, #2541de);
+            box-shadow: 0 8px 20px rgba(27, 16, 234, 0.3);
+        }
+
+        .buy-button::before,
+        .return-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
+            transition: transform 0.3s ease;
+        }
+
+        .buy-button:hover,
+        .return-button:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 12px 30px rgba(46, 204, 113, 0.4);
+        }
+
+        .buy-button:hover {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+        }
+
+        .return-button:hover {
+            background: linear-gradient(135deg, #2541de, #1b10ea);
+            box-shadow: 0 12px 30px rgba(27, 16, 234, 0.4);
+        }
+
+        .buy-button i,
+        .return-button i {
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .buy-button,
+            .return-button {
+                padding: 8px 20px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>
+                <i class="fas fa-receipt"></i>
+                <span data-hindi="बिल" data-english="Bill">बिल</span>
+            </h1>
+            <button class="language-toggle" onclick="toggleLanguage()">
+                <i class="fas fa-globe"></i>
+                <span data-hindi="English" data-english="हिंदी">English</span>
+            </button>
+        </header>
+        
+        <main>
+            <div class="discount-info">
+                <h3 data-hindi="विशेष छूट" data-english="Special Discount">विशेष छूट</h3>
+                <p class="discount-text" data-hindi="सभी आइटम पर 5% की छूट" data-english="5% discount on all items">सभी आइटम पर 5% की छूट</p>
+            </div>
+
+            <div class="items-list">
+                <table>
+                    <thead>
+                        <tr>
+                            <th data-hindi="आइटम" data-english="Item">आइटम</th>
+                            <th data-hindi="कीमत" data-english="Price">कीमत</th>
+                            <th data-hindi="कार्रवाई" data-english="Action">कार्रवाई</th>
+                        </tr>
+                    </thead>
+                    <tbody id="itemsTableBody"></tbody>
+                </table>
+            </div>
+
+            <div class="summary-section">
+                <div class="total-section">
+                    <div class="total-item">
+                        <span data-hindi="कुल राशि" data-english="Subtotal">कुल राशि</span>
+                        <span id="subtotal">₹0.00</span>
+                    </div>
+                    <div class="total-item">
+                        <span data-hindi="छूट" data-english="Discount">छूट</span>
+                        <span id="discount">₹0.00</span>
+                    </div>
+                    <div class="final-total">
+                        <span data-hindi="अंतिम राशि" data-english="Total">अंतिम राशि</span>
+                        <span id="total">₹0.00</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="buy-button-container">
+        <button class="buy-button" onclick="window.location.href='grocery.html'">
+            <i class="fas fa-shopping-bag"></i>
+            <span data-hindi="खरीदें" data-english="Buy">खरीदें</span>
+        </button>
+        <button class="return-button" onclick="window.location.href='grocery.html'">
+            <i class="fas fa-arrow-left"></i>
+            <span data-hindi="वापस जाएं" data-english="Return">वापस जाएं</span>
+        </button>
+    </div>
+
+    <script>
+        let currentLanguage = 'hindi';
+        let cartItems = [];
+
+        // Function to get URL parameters
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            const results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        // Function to process cart data from URL
+        function processCartData() {
+            const cartData = getUrlParameter('cart');
+            if (cartData) {
+                try {
+                    cartItems = JSON.parse(cartData);
+                    updateItemsTable();
+                    calculateTotal();
+                } catch (e) {
+                    console.error('Error parsing cart data:', e);
+                }
+            }
+        }
+
+        // Function to update items table
+        function updateItemsTable() {
+            const tableBody = document.getElementById('itemsTableBody');
+            tableBody.innerHTML = '';
+            
+            if (cartItems.length === 0) {
+                const emptyRow = document.createElement('tr');
+                emptyRow.innerHTML = `
+                    <td colspan="3" style="text-align: center; padding: 20px;">
+                        <i class="fas fa-shopping-cart" style="font-size: 2rem; color: #1b10ea; opacity: 0.5;"></i>
+                        <p data-hindi="कोई आइटम नहीं" data-english="No items">कोई आइटम नहीं</p>
+                    </td>
+                `;
+                tableBody.appendChild(emptyRow);
+                return;
+            }
+            
+            cartItems.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>₹${item.totalPrice.toFixed(2)}</td>
+                    <td>
+                        <span style="color: #1b10ea; font-weight: bold;" data-hindi="बिल किया गया" data-english="Billed">
+                            ${currentLanguage === 'hindi' ? 'बिल किया गया' : 'Billed'}
+                        </span>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Function to calculate total
+        function calculateTotal() {
+            const total = cartItems.reduce((sum, item) => sum + item.totalPrice, 0);
+            const discount = total * 0.05; // 5% discount
+            const finalAmount = total - discount;
+            
+            document.getElementById('subtotal').textContent = `₹${total.toFixed(2)}`;
+            document.getElementById('discount').textContent = `₹${discount.toFixed(2)}`;
+            document.getElementById('total').textContent = `₹${finalAmount.toFixed(2)}`;
+        }
+
+        // Function to toggle language
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'hindi' ? 'english' : 'hindi';
+            updateLanguage();
+        }
+
+        // Function to update language
+        function updateLanguage() {
+            const elements = document.querySelectorAll('[data-hindi]');
+            elements.forEach(element => {
+                if (currentLanguage === 'hindi') {
+                    element.textContent = element.getAttribute('data-hindi');
+                    if (element.tagName === 'INPUT') {
+                        element.placeholder = element.getAttribute('data-hindi');
+                    }
+                } else {
+                    element.textContent = element.getAttribute('data-english');
+                    if (element.tagName === 'INPUT') {
+                        element.placeholder = element.getAttribute('data-english');
+                    }
+                }
+            });
+            updateItemsTable(); // Update table with new language
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            processCartData();
+            updateLanguage();
+        });
+    </script>
+</body>
+</html> 

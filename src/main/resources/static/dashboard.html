@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">Financial Dashboard</div>
+            <ul class="nav-links">
+                
+                <li><a href="grocery.html"><i class="fas fa-shopping-cart"></i> Grocery</a></li>
+                <li><a href="debt-visualization.html"><i class="fas fa-money-bill-wave"></i> Debt</a></li>
+                <li><a href="financial-goals.html"><i class="fas fa-chart-line"></i> Future Plan</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <button class="login-btn"><i class="fas fa-sign-in-alt"></i> Login</button>
+                <button class="signup-btn"><i class="fas fa-user-plus"></i> Sign Up</button>
+                <select id="languageToggle" class="language-toggle">
+                    <option value="en">🌐 English</option>
+                    <option value="hi">🇮🇳 हिंदी</option>
+                  </select>
+                  
+              </div>
+              
+        </div>
+    </nav>
+
+    <main>
+        <!-- Home Section with Charts and Information Cards -->
+        <section id="home" class="section active">
+            <h2>Welcome to Financial Dashboard</h2>
+            
+            <!-- Overview Charts Section -->
+            <div class="overview-charts">
+                <div class="chart-container">
+                    <h3><i class="fas fa-shopping-cart"></i> Grocery Overview</h3>
+                    <div class="chart-stats">
+                        <div class="stat">
+                            <span class="stat-value">$450</span>
+                            <span class="stat-label">Monthly Budget</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">$320</span>
+                            <span class="stat-label">Spent</span>
+                        </div>
+                    </div>
+                    <canvas id="overviewGroceryChart"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h3><i class="fas fa-money-bill-wave"></i> Debt Overview</h3>
+                    <div class="chart-stats">
+                        <div class="stat">
+                            <span class="stat-value">$15,000</span>
+                            <span class="stat-label">Total Debt</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">$2,500</span>
+                            <span class="stat-label">Monthly Payment</span>
+                        </div>
+                    </div>
+                    <canvas id="overviewDebtChart"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h3><i class="fas fa-chart-line"></i> Future Plans</h3>
+                    <div class="chart-stats">
+                        <div class="stat">
+                            <span class="stat-value">$25,000</span>
+                            <span class="stat-label">Savings Goal</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">$10,000</span>
+                            <span class="stat-label">Current Savings</span>
+                        </div>
+                    </div>
+                    <canvas id="overviewFutureChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Information Cards Section -->
+            <div class="info-cards-container">
+                <div class="info-item" data-section="grocery">
+                    <div class="info-image">
+                        <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Grocery Management">
+                    </div>
+                    <div class="info-content">
+                        <h3><i class="fas fa-shopping-cart"></i> Grocery Management</h3>
+                        <p>Track your grocery expenses and create smart shopping lists to save money.</p>
+                        <ul>
+                            <li>Create and manage shopping lists</li>
+                            <li>Track monthly grocery budget</li>
+                            <li>Compare prices across stores</li>
+                            <li>Get smart recommendations</li>
+                        </ul>
+                        <button class="view-dashboard-btn">View Dashboard</button>
+                    </div>
+                </div>
+
+                <div class="info-item" data-section="debt">
+                    <div class="info-image">
+                        <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Debt Management">
+                    </div>
+                    <div class="info-content">
+                        <h3><i class="fas fa-money-bill-wave"></i> Debt Management</h3>
+                        <p>Manage and track your debts effectively with our comprehensive tools.</p>
+                        <ul>
+                            <li>Track all your debts in one place</li>
+                            <li>Create debt payoff strategies</li>
+                            <li>Monitor interest rates</li>
+                            <li>Set payment reminders</li>
+                        </ul>
+                        <button class="view-dashboard-btn">View Dashboard</button>
+                    </div>
+                </div>
+
+                <div class="info-item" data-section="future">
+                    <div class="info-image">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Future Planning">
+                    </div>
+                    <div class="info-content">
+                        <h3><i class="fas fa-chart-line"></i> Future Planning</h3>
+                        <p>Set goals and create a roadmap for your financial success.</p>
+                        <ul>
+                            <li>Set financial goals</li>
+                            <li>Create savings plans</li>
+                            <li>Track investment progress</li>
+                            <li>Plan for retirement</li>
+                        </ul>
+                        <button class="view-dashboard-btn">View Dashboard</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard Sections (Protected) -->
+        <section id="grocery" class="section dashboard-section">
+            <div class="dashboard-cards">
+                <div class="dashboard-card">
+                    <h3><i class="fas fa-shopping-cart"></i> Grocery Overview</h3>
+                    <div class="card-stats">
+                        <div class="stat">
+                            <span class="stat-value">$450</span>
+                            <span class="stat-label">Monthly Budget</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">$320</span>
+                            <span class="stat-label">Spent</span>
+                        </div>
+                    </div>
+                    <canvas id="overviewGroceryChart"></canvas>
+                </div>
+                <div class="dashboard-card">
+                    <h3>Recent Purchases</h3>
+                    <div class="card-content">
+                        <ul class="purchase-list">
+                            <li>
+                                <span class="item-name">Groceries from Walmart</span>
+                                <span class="item-amount">$85.50</span>
+                                <span class="item-date">Today</span>
+                            </li>
+                            <li>
+                                <span class="item-name">Fresh Produce Market</span>
+                                <span class="item-amount">$45.75</span>
+                                <span class="item-date">Yesterday</span>
+                            </li>
+                            <li>
+                                <span class="item-name">Local Supermarket</span>
+                                <span class="item-amount">$120.25</span>
+                                <span class="item-date">3 days ago</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="debt" class="section dashboard-section">
+            <div class="dashboard-cards">
+                <div class="dashboard-card">
+                    <h3><i class="fas fa-money-bill-wave"></i> Debt Overview</h3>
+                    <div class="card-stats">
+                        <div class="stat">
+                            <span class="stat-value">$15,000</span>
+                            <span class="stat-label">Total Debt</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">$2,500</span>
+                            <span class="stat-label">Monthly Payment</span>
+                        </div>
+                    </div>
+                    <canvas id="debtChart"></canvas>
+                </div>
+                <div class="dashboard-card">
+                    <h3>Debt Breakdown</h3>
+                    <div class="card-content">
+                        <ul class="debt-list">
+                            <li>
+                                <span class="debt-name">Credit Card</span>
+                                <span class="debt-amount">$5,000</span>
+                                <span class="debt-rate">18% APR</span>
+                            </li>
+                            <li>
+                                <span class="debt-name">Car Loan</span>
+                                <span class="debt-amount">$8,000</span>
+                                <span class="debt-rate">5% APR</span>
+                            </li>
+                            <li>
+                                <span class="debt-name">Student Loan</span>
+                                <span class="debt-amount">$15,000</span>
+                                <span class="debt-rate">4% APR</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="future" class="section dashboard-section">
+            <div class="dashboard-cards">
+                <div class="dashboard-card">
+                    <h3><i class="fas fa-chart-line"></i> Future Plans</h3>
+                    <div class="card-stats">
+                        <div class="stat">
+                            <span class="stat-value">$25,000</span>
+                            <span class="stat-label">Savings Goal</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">$10,000</span>
+                            <span class="stat-label">Current Savings</span>
+                        </div>
+                    </div>
+                    <canvas id="futureChart"></canvas>
+                </div>
+                <div class="dashboard-card">
+                    <h3>Investment Portfolio</h3>
+                    <div class="card-content">
+                        <ul class="investment-list">
+                            <li>
+                                <span class="investment-name">Stocks</span>
+                                <span class="investment-amount">$5,000</span>
+                                <span class="investment-return">+12% YTD</span>
+                            </li>
+                            <li>
+                                <span class="investment-name">Bonds</span>
+                                <span class="investment-amount">$3,000</span>
+                                <span class="investment-return">+4% YTD</span>
+                            </li>
+                            <li>
+                                <span class="investment-name">Savings Account</span>
+                                <span class="investment-amount">$2,000</span>
+                                <span class="investment-return">+2% APY</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="contact-section">
+            <div class="contact-container">
+                <h2>Contact Us</h2>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <div class="contact-details">
+                            <h3>Phone</h3>
+                            <p>+1 (555) 123-4567</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <div class="contact-details">
+                            <h3>Email</h3>
+                            <p>support@financialdashboard.com</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Login Required</h2>
+            <p>Please login to access the dashboard.</p>
+            <form id="loginForm">
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Password" required>
+                <button type="submit" class="login-submit-btn">Login</button>
+            </form>
+        </div>
+    </div>
+    <!-- Signup Modal -->
+<div id="signupModal" class="modal">
+    <div class="modal-content">
+      <span class="close-signup-modal">&times;</span>
+      <h2>Sign Up</h2>
+      <form id="signupForm">
+        <input type="text" placeholder="Full Name" required />
+        <input type="email" placeholder="Email" required />
+        <input type="password" placeholder="Password" required />
+        <input type="password" placeholder="Confirm Password" required />
+        <button type="submit" class="signup-submit-btn">Create Account</button>
+      </form>
+    </div>
+  </div>
+  
+
+    <script src="script.js"></script>
+
+<!-- 🌟 Floating Chat Button -->
+<button class="chat-button" onclick="toggleChat()">💬</button>
+
+<!-- 🌟 Chat Popup -->
+<div class="chat-popup" id="chatPopup">
+  <div class="chat-header">Ask Me Anything 🤖</div>
+  <div class="chat-body" id="chatBody">
+    <div class="chat-message bot">Hi! I'm Atharv's assistant. How can I help you?</div>
+  </div>
+  <div class="chat-input">
+    <input type="text" id="chatInput" placeholder="Type a message..." />
+    <button onclick="sendMessage()">➤</button>
+  </div>
+</div>
+
+<!-- 🌟 Gemini Chatbot Script -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const chatPopup = document.getElementById("chatPopup");
+    const chatBody = document.getElementById("chatBody");
+    const chatInput = document.getElementById("chatInput");
+
+    window.toggleChat = function () {
+      chatPopup.style.display = chatPopup.style.display === "flex" ? "none" : "flex";
+    };
+
+    window.sendMessage = async function () {
+      const userMessage = chatInput.value.trim();
+      if (!userMessage) return;
+
+      appendMessage("user", userMessage);
+      chatInput.value = "";
+      appendMessage("bot", "Thinking...");
+
+      try {
+        const reply = await getGeminiReply(userMessage);
+        const botMsgs = chatBody.querySelectorAll(".chat-message.bot");
+        botMsgs[botMsgs.length - 1].remove();
+        appendMessage("bot", reply);
+      } catch (err) {
+        appendMessage("bot", "Error fetching response 😞");
+      }
+    };
+
+    chatInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") sendMessage();
+    });
+
+    function appendMessage(sender, text) {
+      const msgDiv = document.createElement("div");
+      msgDiv.className = `chat-message ${sender}`;
+      msgDiv.textContent = text;
+      chatBody.appendChild(msgDiv);
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    async function getGeminiReply(message) {
+      const apiKey = "AIzaSyCC-Q01AQxm7bAvKmNKRIB8uR3OYXdfVao";
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [
+              {
+                role: "user",
+                parts: [{ text: message }],
+              },
+            ],
+          }),
+        }
+      );
+      const data = await res.json();
+      return data?.candidates?.[0]?.content?.parts?.[0]?.text || "No response.";
+    }
+  });
+</script>
+
+<!-- 🌟 Styles (you can also place this in your styles.css) -->
+<style>
+  .chat-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #10a37f;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    font-size: 28px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    z-index: 9999;
+  }
+
+  .chat-popup {
+    display: none;
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 320px;
+    max-height: 500px;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .chat-header {
+    background-color: #10a37f;
+    color: white;
+    padding: 12px;
+    font-weight: bold;
+    text-align: center;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+  }
+
+  .chat-body {
+    padding: 10px;
+    flex: 1;
+    overflow-y: auto;
+    font-size: 14px;
+  }
+
+  .chat-message {
+    margin: 6px 0;
+    padding: 8px 10px;
+    border-radius: 10px;
+    max-width: 80%;
+  }
+
+  .chat-message.user {
+    background-color: #e0e0e0;
+    align-self: flex-end;
+    text-align: right;
+  }
+
+  .chat-message.bot {
+    background-color: #d6f5ee;
+    align-self: flex-start;
+    text-align: left;
+  }
+
+  .chat-input {
+    display: flex;
+    border-top: 1px solid #ccc;
+  }
+
+  .chat-input input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    outline: none;
+    font-size: 14px;
+  }
+
+  .chat-input button {
+    padding: 10px 15px;
+    background-color: #10a37f;
+    border: none;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .chat-input button:hover {
+    background-color: #0e8e6a;
+  }
+</style>
+
+</body>
+</html> 

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Dashboard</title>
+    <link rel="stylesheet" href="pstyles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="profile-card">
+            <div class="profile-header">
+                <div class="profile-avatar">
+                    <div class="avatar-container">
+                        <img src="https://raw.githubusercontent.com/Ashwinvalento/cartoon-avatar/master/lib/images/male/45.png" alt="Profile Picture" id="profile-picture" class="avatar-normal">
+                        <img src="https://raw.githubusercontent.com/Ashwinvalento/cartoon-avatar/master/lib/images/male/86.png" alt="Profile Picture Smiling" id="profile-picture-smile" class="avatar-smile">
+                    </div>
+                </div>
+                <h1 id="user-name">John Doe</h1>
+            </div>
+            
+            <div class="profile-info">
+                <div class="info-group">
+                    <label>Mobile Number:</label>
+                    <p id="mobile-number">+1 234 567 8900</p>
+                </div>
+                
+                <div class="info-group">
+                    <label>Email:</label>
+                    <p id="email">john.doe@example.com</p>
+                </div>
+                
+                <div class="info-group">
+                    <label>Address:</label>
+                    <p id="address">123 Main Street, City, Country</p>
+                </div>
+                
+                <div class="info-group">
+                    <label>Financial Status:</label>
+                    <div class="financial-status">
+                        <div class="status-item">
+                            <span>Income:</span>
+                            <p id="income">₹4,00,000/month</p>
+                        </div>
+                        <div class="status-item">
+                            <span>Savings:</span>
+                            <p id="savings">₹20,00,000</p>
+                        </div>
+                        <div class="status-item">
+                            <span>Investments:</span>
+                            <p id="investments">₹12,00,000</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button id="edit-profile" class="edit-btn">Edit Profile</button>
+            
+            <div class="motivational-quote">
+                <div class="quote-icon">
+                    <i class="fas fa-quote-left"></i>
+                </div>
+                <div class="quote-content">
+                    <p class="quote-text">"Success is not final, failure is not fatal: it is the courage to continue that counts."</p>
+                    <p class="quote-author">- Winston Churchill</p>
+                </div>
+                <div class="quote-decoration">
+                    <div class="decoration-circle"></div>
+                    <div class="decoration-line"></div>
+                    <div class="decoration-circle"></div>
+                </div>
+                <div class="quote-action">
+                    <button class="refresh-quote">
+                        <i class="fas fa-sync-alt"></i>
+                        <span>New Quote</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="pscript.js"></script>
+</body>
+</html> 

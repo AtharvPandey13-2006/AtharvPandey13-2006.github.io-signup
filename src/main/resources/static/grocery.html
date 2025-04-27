@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>सब्जी मंडी - आसान ऑनलाइन खरीदारी</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="bill_style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f8f9fa;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1b10ea, #2541de);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 48%, rgba(255,255,255,0.1) 50%, transparent 52%);
+            background-size: 20px 20px;
+            opacity: 0.3;
+            animation: shimmer 3s infinite linear;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 0 0; }
+            100% { background-position: 20px 20px; }
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            box-shadow: 0 4px 30px rgba(27, 16, 234, 0.1);
+            position: relative;
+            z-index: 10;
+            margin-top: -30px;
+            border-radius: 15px;
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .nav-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(27, 16, 234, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(27, 16, 234, 0.1);
+        }
+
+        .search-bar:focus-within {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(27, 16, 234, 0.2);
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: transparent;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(27, 16, 234, 0.2);
+        }
+
+        .search-bar button {
+            background: linear-gradient(135deg, #1b10ea, #2541de);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(27, 16, 234, 0.3);
+        }
+
+        .search-bar button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(27, 16, 234, 0.4);
+        }
+
+        .category-buttons {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding: 10px 0;
+            scrollbar-width: none;
+        }
+
+        .category-buttons::-webkit-scrollbar {
+            display: none;
+        }
+
+        .category-btn {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px 25px;
+            border-radius: 50px;
+            border: 2px solid #1b10ea;
+            color: #1b10ea;
+            cursor: pointer;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(27, 16, 234, 0.1);
+        }
+
+        .category-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(27, 16, 234, 0.1);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s ease, height 0.3s ease;
+        }
+
+        .category-btn:hover::after {
+            width: 200%;
+            height: 200%;
+        }
+
+        .category-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(27, 16, 234, 0.2);
+        }
+
+        .products-section {
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .product-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(27, 16, 234, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(27, 16, 234, 0.1);
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(27, 16, 234, 0.2);
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(27, 16, 234, 0.1), rgba(37, 65, 222, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .product-card:hover::before {
+            opacity: 1;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.05) rotate(1deg);
+        }
+
+        .product-title {
+            font-size: 1.2rem;
+            color: #333;
+            margin: 15px 0;
+            font-weight: 600;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            color: #1b10ea;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .add-to-cart {
+            background: linear-gradient(135deg, #1b10ea, #2541de);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 15px rgba(27, 16, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .add-to-cart::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
+            transition: transform 0.3s ease;
+        }
+
+        .add-to-cart:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(27, 16, 234, 0.4);
+        }
+
+        .add-to-cart:hover::before {
+            transform: translateX(100%);
+        }
+
+        .cart-count {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #1b10ea, #2541de);
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(27, 16, 234, 0.4);
+            animation: pulse 2s infinite;
+            border: 2px solid white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cart-count:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(27, 16, 234, 0.5);
+        }
+
+        .cart-icon {
+            position: fixed;
+            top: 30px;
+            right: 70px;
+            background: white;
+            color: #1b10ea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(27, 16, 234, 0.2);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .cart-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(27, 16, 234, 0.3);
+        }
+
+        .cart-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+            overflow-y: auto;
+            border-left: 1px solid rgba(27, 16, 234, 0.1);
+            display: none;
+        }
+
+        .cart-panel.active {
+            right: 0;
+            display: block;
+            animation: slideIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes slideIn {
+            from {
+                right: -400px;
+                opacity: 0;
+            }
+            to {
+                right: 0;
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                right: 0;
+                opacity: 1;
+            }
+            to {
+                right: -400px;
+                opacity: 0;
+            }
+        }
+
+        .cart-panel h2 {
+            color: #1b10ea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1b10ea;
+            text-shadow: 0 2px 4px rgba(27, 16, 234, 0.1);
+            position: relative;
+        }
+
+        .cart-panel h2::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(90deg, #1b10ea, #2541de);
+            transition: width 0.3s ease;
+        }
+
+        .cart-panel h2:hover::after {
+            width: 100%;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 15px rgba(27, 16, 234, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(27, 16, 234, 0.1);
+            position: relative;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 10px;
+        }
+
+        .quantity-btn {
+            background: rgba(27, 16, 234, 0.1);
+            border: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            color: #1b10ea;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .quantity-btn:hover {
+            background: rgba(27, 16, 234, 0.2);
+            transform: scale(1.1);
+        }
+
+        .quantity {
+            font-weight: bold;
+            color: #1b10ea;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .remove-item {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(255, 0, 0, 0.1);
+            border: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            color: #ff0000;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+
+        .cart-item:hover .remove-item {
+            opacity: 1;
+        }
+
+        .remove-item:hover {
+            background: rgba(255, 0, 0, 0.2);
+            transform: scale(1.1);
+        }
+
+        .cart-total {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 15px rgba(27, 16, 234, 0.05);
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #1b10ea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(27, 16, 234, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .cart-total:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(27, 16, 234, 0.1);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .close-cart {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(27, 16, 234, 0.1);
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-size: 20px;
+            color: #1b10ea;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+        }
+
+        .close-cart:hover {
+            transform: rotate(90deg);
+            background: rgba(27, 16, 234, 0.2);
+            color: #ff0000;
+        }
+
+        .checkout-btn {
+            background: linear-gradient(135deg, #1b10ea, #2541de);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 15px rgba(27, 16, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .checkout-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
+            transition: transform 0.3s ease;
+        }
+
+        .checkout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(27, 16, 234, 0.4);
+        }
+
+        .checkout-btn:hover::before {
+            transform: translateX(100%);
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .empty-cart i {
+            font-size: 3rem;
+            color: #1b10ea;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #1b10ea, #2541de);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(27, 16, 234, 0.3);
+            z-index: 1000;
+            display: none;
+            backdrop-filter: blur(10px);
+            animation: slideUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translate(-50%, 20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0) scale(1);
+            }
+        }
+
+        .language-toggle {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 12px 25px;
+            border-radius: 50px;
+            border: 2px solid #1b10ea;
+            color: #1b10ea;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(27, 16, 234, 0.2);
+            white-space: nowrap;
+        }
+
+        .language-toggle:hover {
+            background-color: #1b10ea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(27, 16, 234, 0.3);
+        }
+
+        .language-toggle i {
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 30px 15px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .nav {
+                margin: -20px 15px 0;
+                padding: 15px;
+            }
+
+            .search-bar {
+                flex-direction: column;
+                border-radius: 15px;
+            }
+
+            .search-bar input,
+            .search-bar button {
+                width: 100%;
+                border-radius: 15px;
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 20px;
+            }
+
+            .nav-top {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .language-toggle {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .cart-panel {
+                width: 100%;
+                right: -100%;
+            }
+        }
+
+        .buy-button-container {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            text-align: center;
+        }
+
+        .buy-button {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 10px 30px rgba(46, 204, 113, 0.3);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .buy-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
+            transition: transform 0.3s ease;
+        }
+
+        .buy-button:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(46, 204, 113, 0.4);
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+        }
+
+        .buy-button i {
+            font-size: 1.3rem;
+        }
+
+        @media (max-width: 768px) {
+            .buy-button {
+                padding: 12px 30px;
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 data-hindi="किराना स्टोर" data-english="Grocery Store">किराना स्टोर</h1>
+        <p data-hindi="आसान ऑनलाइन खरीदारी" data-english="Easy Online Shopping">आसान ऑनलाइन खरीदारी</p>
+    </div>
+
+    <nav class="nav">
+        <div class="nav-content">
+            <div class="nav-top">
+                <div class="search-bar">
+                    <input type="text" placeholder="आप क्या खरीदना चाहते हैं?" data-hindi="आप क्या खरीदना चाहते हैं?" data-english="What would you like to buy?">
+                    <button><i class="fas fa-search"></i> <span data-hindi="खोजें" data-english="Search">खोजें</span></button>
+                </div>
+                <button class="language-toggle" onclick="toggleLanguage()">
+                    <i class="fas fa-globe"></i>
+                    <span data-hindi="English" data-english="हिंदी">English</span>
+                </button>
+            </div>
+            <div class="category-buttons">
+                <button class="category-btn" data-category="pulses">
+                    <i class="fas fa-wheat-awn"></i>
+                    <span data-hindi="अनाज और दालें" data-english="Grains & Pulses">अनाज और दालें</span>
+                </button>
+                <button class="category-btn" data-category="dairy">
+                    <i class="fas fa-egg"></i>
+                    <span data-hindi="डेयरी उत्पाद" data-english="Dairy Products">डेयरी उत्पाद</span>
+                </button>
+                <button class="category-btn" data-category="bakery">
+                    <i class="fas fa-bread-slice"></i>
+                    <span data-hindi="बेकरी आइटम" data-english="Bakery Items">बेकरी आइटम</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="cart-icon" onclick="toggleCart()">
+        <i class="fas fa-shopping-cart"></i>
+    </div>
+    <div class="cart-count" onclick="toggleCart()">0</div>
+    <div class="cart-panel" id="cartPanel">
+        <button class="close-cart" onclick="toggleCart()">×</button>
+        <h2 data-hindi="आपकी कार्ट" data-english="Your Cart">आपकी कार्ट</h2>
+        <div id="cartItems"></div>
+        <div class="cart-total">
+            <span data-hindi="कुल राशि" data-english="Total">कुल राशि</span>
+            <span id="cartTotal">₹0</span>
+        </div>
+        <button class="checkout-btn" onclick="checkout()" data-hindi="चेकआउट" data-english="Checkout">चेकआउट</button>
+    </div>
+
+    <div class="products-section" id="productsSection">
+        <h2 style="text-align: center; margin-bottom: 20px;" data-hindi="अनाज और दालें" data-english="Grains & Pulses">अनाज और दालें</h2>
+        <div class="products-grid" id="productsGrid">
+            <!-- Pulses -->
+            <div class="product-card" data-category="pulses">
+                <img src="https://miro.medium.com/v2/resize:fit:550/1*HQxRkT5KOTuLQlErGKnwwg.jpeg" class="product-image" alt="चना दाल">
+                <h3 class="product-title" data-hindi="चना दाल" data-english="Chana Dal">चना दाल</h3>
+                <p class="product-price">₹80/किलो</p>
+                <button class="add-to-cart" onclick="addToCart('चना दाल', 80)" data-hindi="कार्ट में जोड़ें" data-english="Add to Cart">कार्ट में जोड़ें</button>
+            </div>
+            <div class="product-card" data-category="pulses">
+                <img src="https://www.rajbhog.com/wp-content/uploads/2020/12/Moong-Dal-870x635.jpg" class="product-image" alt="मूंग दाल">
+                <h3 class="product-title" data-hindi="मूंग दाल" data-english="Moong Dal">मूंग दाल</h3>
+                <p class="product-price">₹90/किलो</p>
+                <button class="add-to-cart" onclick="addToCart('मूंग दाल', 90)" data-hindi="कार्ट में जोड़ें" data-english="Add to Cart">कार्ट में जोड़ें</button>
+            </div>
+            <div class="product-card" data-category="pulses">
+                <img src="https://radianceglobal.in/wp-content/uploads/2023/02/image1.1.png" class="product-image" alt="अरहर दाल">
+                <h3 class="product-title" data-hindi="अरहर दाल" data-english="Arhar Dal">अरहर दाल</h3>
+                <p class="product-price">₹100/किलो</p>
+                <button class="add-to-cart" onclick="addToCart('अरहर दाल', 100)" data-hindi="कार्ट में जोड़ें" data-english="Add to Cart">कार्ट में जोड़ें</button>
+            </div>
+            <div class="product-card" data-category="pulses">
+                <img src="https://www.osheaherbals.com/cdn/shop/articles/benefits-of-masoor-dal-for-skin.jpg?v=1737118246" class="product-image" alt="मसूर दाल">
+                <h3 class="product-title" data-hindi="मसूर दाल" data-english="Masoor Dal">मसूर दाल</h3>
+                <p class="product-price">₹85/किलो</p>
+                <button class="add-to-cart" onclick="addToCart('मसूर दाल', 85)" data-hindi="कार्ट में जोड़ें" data-english="Add to Cart">कार्ट में जोड़ें</button>
+            </div>
+            <div class="product-card" data-category="pulses">
+                <img src="https://organicmandya.com/cdn/shop/files/BlackuraddalWithHusk_47b8fbaa-c3f2-45ca-acc2-73cdd1c2e291.jpg?v=1719902223" class="product-image" alt="उड़द दाल">
+                <h3 class="product-title" data-hindi="उड़द दाल" data-english="Urad Dal">उड़द दाल</h3>
+                <p class="product-price">₹95/किलो</p>
+                <button class="add-to-cart" onclick="addToCart('उड़द दाल', 95)" data-hindi="कार्ट में जोड़ें" data-english="Add to Cart">कार्ट में जोड़ें</button>
+            </div>
+            <div class="product-card" data-category="pulses">
+                <img src="https://bajarhaat.com/wp-content/uploads/2021/02/rajma-dal-500x500-1.jpg" class="product-image" alt="राजमा">
+                <h3 class="product-title" data-hindi="राजमा" data-english="Rajma">राजमा</h3>
+                <p class="product-price">₹110/किलो</p>
+                <button class="add-to-cart" onclick="addToCart('राजमा', 110)" data-hindi="कार्ट में जोड़ें" data-english="Add to Cart">कार्ट में जोड़ें</button>
+            </div>
+
+            <!-- Dairy Products -->
+            <div class="product-card" data-category="dairy">
+                <img src="https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&auto=format&fit=crop&q=60" class="product-image" alt="दूध">
+                <h3 class="product-title" data-hindi="दूध" data-english="Milk">दूध</h3>
+                <p class="product-price">₹50/लीटर</p>
+                <button class="add-to-cart" onclick="addToCart('दूध', 50)" data-hindi="कार्ट में जोड़ें" data-english="Add to Cart">कार्ट में जोड़ें</button>
+            </div>
+            <div class="product-card" data-category="dairy">
+                <img src="https://rachnacooks.com/wp-content/uploads/2019/08/homemade-dahi-2.jpg" class="product-image" alt="दही">
+                <h3 class="product-title" data-hindi="दही" data-english="Curd">दही</h3>
+                <p class="product-price">₹40/किलो</p>
+                <button class="add-to-cart" onclick="addToCart('दही', 40)" data-hindi="कार्ट में जोड़ें" data-english="Add to Cart">कार्ट में जोड़ें</button>
+            </div>
+            <div class="product-card" data-category="dairy">
+                <img src="https://www.indianhealthyrecipes.com/wp-content/uploads/2024/05/how-to-make-paneer-recipe.jpg" class="product-image" alt="पनीर">
+                <h3 class="product-title" data-hindi="पनीर" data-english="Paneer">पनीर</h3>
+                <p class="product-price">₹200/किलो</p>
+                <button class="add-to-cart" onclick="addToCart('पनीर', 200)" data-hindi="कार्ट में जोड़ें" data-english="Add to Cart">कार्ट में जोड़ें</button>
+            </div>
+            <div class="product-card" data-category="dairy">
+                <img src="https://images.hindustantimes.com/img/2022/08/19/1600x900/3e502046-1fbb-11ed-bfbb-46b3285c66bd_1660913079782.jpg" class="product-image" alt="मक्खन">
+                <h3 class="product-title" data-hindi="मक्खन" data-english="Butter">मक्खन</h3>
+                <p class="product-price">₹500/किलो</p>
+                <button class="add-to-cart" onclick="addToCart('मक्खन', 500)" data-hindi="कार्ट में जोड़ें" data-english="Add to Cart">कार्ट में जोड़ें</button>
+            </div>
+            <div class="product-card" data-category="dairy">
+                <img src="https://assets.clevelandclinic.org/transform/8e9ed390-deac-4c0d-9f74-b90570313030/ghee-041421-SG_770x533_jpg" class="product-image" alt="घी">
+                <h3 class="product-title" data-hindi="घी" data-english="Ghee">घी</h3>
+                <p class="product-price">₹600/किलो</p>
+                <button class="add-to-cart" onclick="addToCart('घी', 600)" data-hindi="कार्ट में जोड़ें" data-english="Add to Cart">कार्ट में जोड़ें</button>
+            </div>
+            <div class="product-card" data-category="dairy">
+                <img src="https://5.imimg.com/data5/MB/QE/MY-19263580/shutterstock_52435441-500x500.jpg" class="product-image" alt="चीज़">
+                <h3 class="product-title" data-hindi="चीज़" data-english="Cheese">चीज़</h3>
+                <p class="product-price">₹300/किलो</p>
+                <button class="add-to-cart" onclick="addToCart('चीज़', 300)" data-hindi="कार्ट में जोड़ें" data-english="Add to Cart">कार्ट में जोड़ें</button>
+            </div>
+
+            <!-- Grains -->
+            <div class="product-card" data-category="grains">
+                <img src="https://media.istockphoto.com/id/153737841/photo/rice.jpg?s=612x612&w=0&k=20&c=lfO7iLT0UsDDzra0uBOsN1rvr2d5OEtrG2uwbts33_c=" class="product-image" alt="बासमती चावल">
+                <h3 class="product-title" data-hindi="बासमती चावल" data-english="Basmati Rice">बासमती चावल</h3>
+                <p class="product-price">₹120/किलो</p>
+                <button class="add-to-cart" onclick="addToCart('बासमती चावल', 120)" data-hindi="कार्ट में जोड़ें" data-english="Add to Cart">कार्ट में जोड़ें</button>
+            </div>
+            
+            <div class="product-card" data-category="grains">
+                <img src="https://media.istockphoto.com/id/172876049/photo/whole-wheat-flour.jpg?s=612x612&w=0&k=20&c=bK48VqkF49oReBRhDoGfMORGapX2iWosEeImG_SXA8Q=" class="product-image" alt="गेहूं">
+                <h3 class="product-title" data-hindi="Flour" data-english="Aata">गेहूं</h3>
+                <p class="product-price">₹40/किलो</p>
+                <button class="add-to-cart" onclick="addToCart('गेहूं', 40)" data-hindi="कार्ट में जोड़ें" data-english="Add to Cart">कार्ट में जोड़ें</button>
+            </div>
+            
+            
+            
+
+            <!-- Bakery Items -->
+            <div class="product-card" data-category="bakery">
+                <img src="https://www.bhg.com/thmb/ov2S31znAvSCXqrpgJQ8rwBgzp8=/2250x0/filters:no_upscale():strip_icc()/BHG-milk-bread-4CdeIL1uKGyB5ryU8J_EED-aaa76729c86a413ca7500029edba79f0.jpg" class="product-image" alt="ब्रेड">
+                <h3 class="product-title" data-hindi="ब्रेड" data-english="Bread">ब्रेड</h3>
+                <p class="product-price">₹40/पैकेट</p>
+                <button class="add-to-cart" onclick="addToCart('ब्रेड', 40)" data-hindi="कार्ट में जोड़ें" data-english="Add to Cart">कार्ट में जोड़ें</button>
+            </div>
+            <div class="product-card" data-category="bakery">
+                <img src="https://www.cookiecraft.in/cdn/shop/products/SWEETBUN.jpg?v=1600773881" class="product-image" alt="बन">
+                <h3 class="product-title" data-hindi="बन" data-english="Bun">बन</h3>
+                <p class="product-price">₹20/पीस</p>
+                <button class="add-to-cart" onclick="addToCart('बन', 20)" data-hindi="कार्ट में जोड़ें" data-english="Add to Cart">कार्ट में जोड़ें</button>
+            </div>
+            <div class="product-card" data-category="bakery">
+                <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=500&auto=format&fit=crop&q=60" class="product-image" alt="केक">
+                <h3 class="product-title" data-hindi="केक" data-english="Cake">केक</h3>
+                <p class="product-price">₹300/किलो</p>
+                <button class="add-to-cart" onclick="addToCart('केक', 300)" data-hindi="कार्ट में जोड़ें" data-english="Add to Cart">कार्ट में जोड़ें</button>
+            </div>
+            <div class="product-card" data-category="bakery">
+                <img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=500&auto=format&fit=crop&q=60" class="product-image" alt="डोनट">
+                <h3 class="product-title" data-hindi="Ice-cream" data-english="Donut">डोनट</h3>
+                <p class="product-price">₹60/पीस</p>
+                <button class="add-to-cart" onclick="addToCart('डोनट', 60)" data-hindi="कार्ट में जोड़ें" data-english="Add to Cart">कार्ट में जोड़ें</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <script src="billJs.js"></script>
+    <script>
+        let cartItems = [];
+        let currentLanguage = 'hindi';
+        let isCartOpen = false;
+
+        function toggleCart() {
+            const cartPanel = document.getElementById('cartPanel');
+            isCartOpen = !isCartOpen;
+            
+            if (isCartOpen) {
+                cartPanel.style.display = 'block';
+                setTimeout(() => {
+                    cartPanel.classList.add('active');
+                }, 10);
+            } else {
+                cartPanel.classList.remove('active');
+                setTimeout(() => {
+                    cartPanel.style.display = 'none';
+                }, 300);
+            }
+        }
+
+        // Initialize language on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateLanguage();
+            initializeSearch();
+            initializeCategoryButtons();
+        });
+
+        function updateLanguage() {
+            const elements = document.querySelectorAll('[data-hindi]');
+            
+            elements.forEach(element => {
+                if (currentLanguage === 'hindi') {
+                    element.textContent = element.getAttribute('data-hindi');
+                } else {
+                    element.textContent = element.getAttribute('data-english');
+                }
+            });
+
+            // Update input placeholder
+            const searchInput = document.querySelector('.search-bar input');
+            if (searchInput) {
+                searchInput.placeholder = currentLanguage === 'hindi' 
+                    ? searchInput.getAttribute('data-hindi')
+                    : searchInput.getAttribute('data-english');
+            }
+
+            // Update language toggle button text
+            const languageToggle = document.querySelector('.language-toggle span');
+            if (languageToggle) {
+                languageToggle.textContent = currentLanguage === 'hindi' ? 'English' : 'हिंदी';
+            }
+
+            // Update cart display
+            updateCartDisplay();
+        }
+
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'hindi' ? 'english' : 'hindi';
+            updateLanguage();
+        }
+
+        // Update quantity function
+        function updateQuantity(index, change) {
+            const item = cartItems[index];
+            const newQuantity = item.quantity + change;
+            
+            if (newQuantity > 0) {
+                item.quantity = newQuantity;
+                item.totalPrice = item.price * item.quantity;
+                updateCartDisplay();
+                
+                // Show notification
+                const message = currentLanguage === 'hindi' 
+                    ? `${item.name} की मात्रा ${item.quantity} हो गई है`
+                    : `Quantity of ${item.name} is now ${item.quantity}`;
+                showNotification(message);
+            } else {
+                removeItem(index);
+            }
+        }
+
+        // Remove item function
+        function removeItem(index) {
+            const removedItem = cartItems[index];
+            cartItems.splice(index, 1);
+            updateCartDisplay();
+            
+            // Show notification
+            const message = currentLanguage === 'hindi' 
+                ? `${removedItem.name} कार्ट से हटा दिया गया है`
+                : `${removedItem.name} has been removed from cart`;
+            showNotification(message);
+        }
+
+        // Update cart display function
+        function updateCartDisplay() {
+            const cartItemsContainer = document.getElementById('cartItems');
+            const cartTotal = document.getElementById('cartTotal');
+            const cartCount = document.querySelector('.cart-count');
+            
+            // Calculate total items for cart count
+            const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.textContent = totalItems;
+            cartCount.style.display = totalItems > 0 ? 'flex' : 'none';
+            
+            // Update cart items display
+            cartItemsContainer.innerHTML = '';
+            
+            if (cartItems.length === 0) {
+                cartItemsContainer.innerHTML = `
+                    <div class="empty-cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <p data-hindi="आपकी कार्ट खाली है" data-english="Your cart is empty">
+                            ${currentLanguage === 'hindi' ? 'आपकी कार्ट खाली है' : 'Your cart is empty'}
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let total = 0;
+            cartItems.forEach((item, index) => {
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                cartItem.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span class="cart-item-name">${item.name}</span>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn" onclick="updateQuantity(${index}, -1)">-</button>
+                            <span class="quantity">${item.quantity}</span>
+                            <button class="quantity-btn" onclick="updateQuantity(${index}, 1)">+</button>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span class="cart-item-price">₹${item.totalPrice}</span>
+                        <button class="remove-item" onclick="removeItem(${index})">×</button>
+                    </div>
+                `;
+                cartItemsContainer.appendChild(cartItem);
+                total += item.totalPrice;
+            });
+            
+            // Update total
+            cartTotal.textContent = `₹${total}`;
+        }
+
+        // Update notification messages with language support
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // Add to cart function
+        function addToCart(productName, price) {
+            const existingItem = cartItems.find(item => item.name === productName);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+                existingItem.totalPrice = existingItem.price * existingItem.quantity;
+            } else {
+                cartItems.push({
+                    name: productName,
+                    price: price,
+                    quantity: 1,
+                    totalPrice: price
+                });
+            }
+            
+            updateCartDisplay();
+            const message = currentLanguage === 'hindi' 
+                ? productName + ' कार्ट में जोड़ दिया गया है'
+                : productName + ' added to cart';
+            showNotification(message);
+        }
+
+        // Update checkout function with language support
+        function checkout() {
+            if (cartItems.length === 0) {
+                const message = currentLanguage === 'hindi' 
+                    ? 'कार्ट खाली है'
+                    : 'Cart is empty';
+                showNotification(message);
+                return;
+            }
+
+            // Convert cart items to URL parameters
+            const cartData = encodeURIComponent(JSON.stringify(cartItems));
+            
+            // Redirect to bill.html with cart data
+            window.location.href = `bill.html?cart=${cartData}`;
+        }
+
+        // Initialize cart state
+        document.addEventListener('DOMContentLoaded', function() {
+            const cartPanel = document.getElementById('cartPanel');
+            cartPanel.style.display = 'none';
+            
+            // Add click handlers
+            document.querySelector('.cart-icon').addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (!isCartOpen) {
+                    toggleCart();
+                }
+            });
+
+            document.querySelector('.cart-count').addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (!isCartOpen) {
+                    toggleCart();
+                }
+            });
+
+            document.querySelector('.close-cart').addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (isCartOpen) {
+                    toggleCart();
+                }
+            });
+
+            // Close cart when clicking outside
+            document.addEventListener('click', function(e) {
+                const cartPanel = document.getElementById('cartPanel');
+                const cartIcon = document.querySelector('.cart-icon');
+                const cartCount = document.querySelector('.cart-count');
+                const closeButton = document.querySelector('.close-cart');
+                
+                if (isCartOpen && 
+                    !cartPanel.contains(e.target) && 
+                    !cartIcon.contains(e.target) && 
+                    !cartCount.contains(e.target) &&
+                    !closeButton.contains(e.target)) {
+                    toggleCart();
+                }
+            });
+
+            // Prevent cart panel from closing when clicking inside it
+            cartPanel.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+
+            // Prevent body clicks from affecting cart
+            document.body.addEventListener('click', function(e) {
+                if (isCartOpen && 
+                    !cartPanel.contains(e.target) && 
+                    !cartIcon.contains(e.target) && 
+                    !cartCount.contains(e.target)) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            });
+        });
+
+        // Search functionality
+        function initializeSearch() {
+            const searchButton = document.querySelector('.search-bar button');
+            const searchInput = document.querySelector('.search-bar input');
+            
+            // Search button click handler
+            searchButton.addEventListener('click', function() {
+                performSearch();
+            });
+
+            // Enter key handler
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+
+            // Clear search on input change
+            searchInput.addEventListener('input', function() {
+                if (this.value.trim() === '') {
+                    clearSearch();
+                }
+            });
+        }
+
+        function performSearch() {
+            const searchTerm = document.querySelector('.search-bar input').value.toLowerCase();
+            const products = document.querySelectorAll('.product-card');
+            const productsSection = document.getElementById('productsSection');
+            const heading = productsSection.querySelector('h2');
+            let foundProducts = false;
+
+            // Update heading for search results
+            heading.setAttribute('data-hindi', 'खोज परिणाम');
+            heading.setAttribute('data-english', 'Search Results');
+            heading.textContent = currentLanguage === 'hindi' 
+                ? heading.getAttribute('data-hindi')
+                : heading.getAttribute('data-english');
+
+            // Filter products based on search term
+            products.forEach(product => {
+                const productTitle = product.querySelector('.product-title').textContent.toLowerCase();
+                const productHindi = product.querySelector('.product-title').getAttribute('data-hindi').toLowerCase();
+                const productEnglish = product.querySelector('.product-title').getAttribute('data-english').toLowerCase();
+
+                if (productTitle.includes(searchTerm) || 
+                    productHindi.includes(searchTerm) || 
+                    productEnglish.includes(searchTerm)) {
+                    product.style.display = 'block';
+                    foundProducts = true;
+                } else {
+                    product.style.display = 'none';
+                }
+            });
+
+            // Show message if no products found
+            if (!foundProducts) {
+                const message = currentLanguage === 'hindi' 
+                    ? 'कोई उत्पाद नहीं मिला'
+                    : 'No products found';
+                showNotification(message);
+            }
+        }
+
+        function clearSearch() {
+            const products = document.querySelectorAll('.product-card');
+            const productsSection = document.getElementById('productsSection');
+            const heading = productsSection.querySelector('h2');
+            
+            // Reset heading
+            heading.setAttribute('data-hindi', 'सभी उत्पाद');
+            heading.setAttribute('data-english', 'All Products');
+            heading.textContent = currentLanguage === 'hindi' 
+                ? heading.getAttribute('data-hindi')
+                : heading.getAttribute('data-english');
+            
+            // Show all products
+            products.forEach(product => {
+                product.style.display = 'block';
+            });
+        }
+
+        // Category button functionality
+        function initializeCategoryButtons() {
+            const categoryButtons = document.querySelectorAll('.category-btn');
+            const productsSection = document.getElementById('productsSection');
+            const heading = productsSection.querySelector('h2');
+            
+            categoryButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const category = this.getAttribute('data-category');
+                    
+                    // Update heading based on category
+                    if (category === 'pulses') {
+                        heading.setAttribute('data-hindi', 'अनाज और दालें');
+                        heading.setAttribute('data-english', 'Grains & Pulses');
+                    } else if (category === 'dairy') {
+                        heading.setAttribute('data-hindi', 'डेयरी उत्पाद');
+                        heading.setAttribute('data-english', 'Dairy Products');
+                    } else if (category === 'bakery') {
+                        heading.setAttribute('data-hindi', 'बेकरी आइटम');
+                        heading.setAttribute('data-english', 'Bakery Items');
+                    }
+                    
+                    // Update heading text
+                    heading.textContent = currentLanguage === 'hindi' 
+                        ? heading.getAttribute('data-hindi')
+                        : heading.getAttribute('data-english');
+                    
+                    // Filter products
+                    const products = document.querySelectorAll('.product-card');
+                    products.forEach(product => {
+                        if (product.getAttribute('data-category') === category) {
+                            product.style.display = 'block';
+                        } else {
+                            product.style.display = 'none';
+                        }
+                    });
+                    
+                    // Show notification
+                    const message = currentLanguage === 'hindi' 
+                        ? `${heading.getAttribute('data-hindi')} दिखा रहा है`
+                        : `Showing ${heading.getAttribute('data-english')}`;
+                    showNotification(message);
+                });
+            });
+        }
+    </script>
+    
+<!-- 🌟 Floating Chat Button -->
+<button class="chat-button" onclick="toggleChat()">💬</button>
+
+<!-- 🌟 Chat Popup -->
+<div class="chat-popup" id="chatPopup">
+  <div class="chat-header">Ask Me Anything 🤖</div>
+  <div class="chat-body" id="chatBody">
+    <div class="chat-message bot">Hi! I'm Atharv's assistant. How can I help you?</div>
+  </div>
+  <div class="chat-input">
+    <input type="text" id="chatInput" placeholder="Type a message..." />
+    <button onclick="sendMessage()">➤</button>
+  </div>
+</div>
+
+<!-- 🌟 Gemini Chatbot Script -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const chatPopup = document.getElementById("chatPopup");
+    const chatBody = document.getElementById("chatBody");
+    const chatInput = document.getElementById("chatInput");
+
+    window.toggleChat = function () {
+      chatPopup.style.display = chatPopup.style.display === "flex" ? "none" : "flex";
+    };
+
+    window.sendMessage = async function () {
+      const userMessage = chatInput.value.trim();
+      if (!userMessage) return;
+
+      appendMessage("user", userMessage);
+      chatInput.value = "";
+      appendMessage("bot", "Thinking...");
+
+      try {
+        const reply = await getGeminiReply(userMessage);
+        const botMsgs = chatBody.querySelectorAll(".chat-message.bot");
+        botMsgs[botMsgs.length - 1].remove();
+        appendMessage("bot", reply);
+      } catch (err) {
+        appendMessage("bot", "Error fetching response 😞");
+      }
+    };
+
+    chatInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") sendMessage();
+    });
+
+    function appendMessage(sender, text) {
+      const msgDiv = document.createElement("div");
+      msgDiv.className = `chat-message ${sender}`;
+      msgDiv.textContent = text;
+      chatBody.appendChild(msgDiv);
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    async function getGeminiReply(message) {
+      const apiKey = "AIzaSyCC-Q01AQxm7bAvKmNKRIB8uR3OYXdfVao";
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [
+              {
+                role: "user",
+                parts: [{ text: message }],
+              },
+            ],
+          }),
+        }
+      );
+      const data = await res.json();
+      return data?.candidates?.[0]?.content?.parts?.[0]?.text || "No response.";
+    }
+  });
+</script>
+
+<!-- 🌟 Styles (you can also place this in your styles.css) -->
+<style>
+  .chat-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #10a37f;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    font-size: 28px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    z-index: 9999;
+  }
+
+  .chat-popup {
+    display: none;
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 320px;
+    max-height: 500px;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .chat-header {
+    background-color: #10a37f;
+    color: white;
+    padding: 12px;
+    font-weight: bold;
+    text-align: center;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+  }
+
+  .chat-body {
+    padding: 10px;
+    flex: 1;
+    overflow-y: auto;
+    font-size: 14px;
+  }
+
+  .chat-message {
+    margin: 6px 0;
+    padding: 8px 10px;
+    border-radius: 10px;
+    max-width: 80%;
+  }
+
+  .chat-message.user {
+    background-color: #e0e0e0;
+    align-self: flex-end;
+    text-align: right;
+  }
+
+  .chat-message.bot {
+    background-color: #d6f5ee;
+    align-self: flex-start;
+    text-align: left;
+  }
+
+  .chat-input {
+    display: flex;
+    border-top: 1px solid #ccc;
+  }
+
+  .chat-input input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    outline: none;
+    font-size: 14px;
+  }
+
+  .chat-input button {
+    padding: 10px 15px;
+    background-color: #10a37f;
+    border: none;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .chat-input button:hover {
+    background-color: #0e8e6a;
+  }
+</style>
+</body>
+</html> 

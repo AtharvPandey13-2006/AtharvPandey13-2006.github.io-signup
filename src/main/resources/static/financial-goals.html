@@ -1,0 +1,2284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Goals for Informal Workers</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCC-Q01AQxm7bAvKmNKRIB8uR3OYXdfVao&libraries=places"></script>
+    <script src="https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent"></script>
+    <style>
+        :root {
+            --primary-color: #6C63FF;
+            --primary-light: #8B85FF;
+            --primary-dark: #4B44CC;
+            --secondary-color: #FF6584;
+            --accent-color: #FFB74D;
+            --success-color: #4CAF50;
+            --background-color: #f5f5f5;
+            --card-background: rgba(255, 255, 255, 0.95);
+            --text-color: #333;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --gradient-start: #F8F9FF;
+            --gradient-end: #E6E9FF;
+            --border-radius: 16px;
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all var(--transition-speed) ease;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(108, 99, 255, 0.2);
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            margin-bottom: 30px;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            animation: pulse 4s infinite alternate;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header h1 {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+            animation: fadeInDown 0.8s ease;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(45deg, #fff, #e6e9ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+        }
+
+        .header h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #fff, transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        .header p {
+            font-size: 1.4em;
+            opacity: 0.9;
+            animation: fadeInUp 0.8s ease;
+            margin-top: 20px;
+            line-height: 1.6;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 30px;
+            animation: fadeInUp 1s ease;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .header-decoration {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+
+        .header-decoration::before,
+        .header-decoration::after {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 6s infinite alternate;
+        }
+
+        .header-decoration::before {
+            top: -100px;
+            left: -100px;
+            animation-delay: -3s;
+        }
+
+        .header-decoration::after {
+            bottom: -100px;
+            right: -100px;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 40px 20px;
+            }
+
+            .header h1 {
+                font-size: 2.5em;
+            }
+
+            .header p {
+                font-size: 1.2em;
+            }
+
+            .header-stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .stat-item {
+                width: 100%;
+                max-width: 300px;
+                margin: 0 auto;
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .goal-card {
+            background: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 32px var(--shadow-color);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transform: translateY(0);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .goal-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px var(--shadow-color);
+        }
+
+        .goal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .goal-title {
+            font-size: 1.5em;
+            color: var(--primary-color);
+        }
+
+        .goal-deadline {
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+
+        .progress-container {
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 24px;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.05));
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+            transition: width 0.5s ease;
+        }
+
+        .savings-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .savings-item {
+            text-align: center;
+            padding: 15px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+            border-radius: 12px;
+            box-shadow: 0 4px 15px var(--shadow-color);
+        }
+
+        .add-goal-form {
+            background: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 32px var(--shadow-color);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 1.1em;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(108, 99, 255, 0.4);
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+        }
+
+        .tips-section {
+            background: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 32px var(--shadow-color);
+        }
+
+        .tip-card {
+            background: linear-gradient(135deg, rgba(248, 249, 255, 0.9), rgba(230, 233, 255, 0.7));
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .success-stories {
+            background: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 32px var(--shadow-color);
+        }
+
+        .story-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid var(--success-color);
+        }
+
+        .insurance-section {
+            background: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px var(--shadow-color);
+            animation: fadeIn 0.5s ease;
+        }
+
+        .insurance-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            border-left: 4px solid var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            transform: translateX(0);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .insurance-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 8px 24px var(--shadow-color);
+        }
+
+        .insurance-image {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .insurance-card:hover .insurance-image {
+            transform: scale(1.05);
+        }
+
+        .insurance-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .insurance-content p, .housing-content p {
+            margin-bottom: 10px;
+        }
+
+        .insurance-content .btn, .housing-content .btn {
+            align-self: flex-start;
+            margin-top: auto;
+        }
+
+        .housing-section {
+            background: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 32px var(--shadow-color);
+        }
+
+        .housing-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid var(--accent-color);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .housing-image {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .housing-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .benefits-list {
+            list-style-type: none;
+            padding-left: 0;
+            margin-top: 10px;
+        }
+
+        .benefits-list li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .benefits-list li:before {
+            content: "✓";
+            color: var(--success-color);
+            position: absolute;
+            left: 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .savings-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .insurance-card {
+                flex-direction: column;
+                text-align: center;
+                padding: 20px;
+            }
+            
+            .insurance-image {
+                width: 100px;
+                height: 100px;
+            }
+
+            .housing-card {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .housing-image {
+                width: 100px;
+                height: 100px;
+            }
+
+            .benefits-list li {
+                text-align: left;
+            }
+
+            .insurance-content .btn, .housing-content .btn {
+                align-self: center;
+                width: 100%;
+                max-width: 200px;
+            }
+
+            .header {
+                padding: 30px 15px;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .header p {
+                font-size: 1em;
+            }
+        }
+
+        .state-selection {
+            background: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px var(--shadow-color);
+            animation: slideIn 0.5s ease;
+        }
+
+        .state-dropdown, .location-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--primary-color);
+            border-radius: 12px;
+            font-size: 16px;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .state-dropdown:hover, .location-input:hover {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+        }
+
+        .state-dropdown:focus, .location-input:focus {
+            outline: none;
+            border-color: var(--primary-dark);
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
+        }
+
+        .state-selection label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes fadeInDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(108, 99, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Success Message Animation */
+        .success-message {
+            background: var(--success-color);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            animation: slideIn 0.5s ease;
+        }
+
+        /* Add new animations and effects */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+        @keyframes borderGlow {
+            0% { border-color: var(--primary-color); }
+            50% { border-color: var(--primary-light); }
+            100% { border-color: var(--primary-color); }
+        }
+
+        /* Enhanced header animations */
+        .header {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, 
+                rgba(108, 99, 255, 0.2),
+                rgba(139, 133, 255, 0.2),
+                rgba(108, 99, 255, 0.2));
+            background-size: 200% 200%;
+            animation: shimmer 3s infinite linear;
+            z-index: 1;
+        }
+
+        .header h1, .header p {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Enhanced card animations */
+        .goal-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .goal-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, 
+                transparent,
+                rgba(255, 255, 255, 0.1),
+                transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .goal-card:hover::after {
+            transform: translateX(100%);
+        }
+
+        /* Enhanced insurance card animations */
+        .insurance-card {
+            position: relative;
+            overflow: hidden;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .insurance-card:hover {
+            animation: none;
+            transform: translateY(-5px) scale(1.02);
+        }
+
+        .insurance-image {
+            transition: transform 0.5s ease, filter 0.5s ease;
+        }
+
+        .insurance-card:hover .insurance-image {
+            transform: scale(1.1);
+            filter: brightness(1.1);
+        }
+
+        /* Enhanced button animations */
+        .btn {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        /* Enhanced form animations */
+        .form-group input, .form-group select {
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            animation: borderGlow 2s infinite;
+            transform: translateY(-2px);
+        }
+
+        /* Progress bar animation */
+        .progress {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        /* Success message animation */
+        .success-message {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .success-message::before {
+            content: '✓';
+            position: absolute;
+            left: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            animation: slideIn 0.5s ease forwards;
+        }
+
+        /* Loading animation enhancement */
+        .loading {
+            position: relative;
+        }
+
+        .loading::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border: 3px solid rgba(108, 99, 255, 0.1);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        /* Add smooth scroll behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Enhanced mobile animations */
+        @media (max-width: 768px) {
+            .insurance-card {
+                animation: none;
+            }
+
+            .insurance-card:hover {
+                transform: translateY(-3px) scale(1.01);
+            }
+
+            .btn:hover::before {
+                width: 200px;
+                height: 200px;
+            }
+        }
+
+        /* Add 3D effect to cards */
+        .goal-card, .insurance-card {
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .goal-card:hover, .insurance-card:hover {
+            transform: translateY(-5px) rotateX(5deg);
+        }
+
+        /* Add glass morphism effect */
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Add this class to relevant elements */
+        .goal-card, .insurance-card, .state-selection {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Add new styles for location-based schemes */
+        .location-schemes-section {
+            background: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px var(--shadow-color);
+            animation: fadeIn 0.5s ease;
+        }
+
+        .location-info {
+            margin-top: 20px;
+        }
+
+        .current-location {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            background: rgba(108, 99, 255, 0.1);
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .current-location i {
+            color: var(--primary-color);
+            font-size: 1.2em;
+        }
+
+        .schemes-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .scheme-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            transition: transform 0.3s ease;
+        }
+
+        .scheme-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .scheme-title {
+            color: var(--primary-color);
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .scheme-details {
+            margin-top: 10px;
+        }
+
+        .scheme-details p {
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+
+        .scheme-link {
+            display: inline-block;
+            margin-top: 15px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .scheme-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Add styles for recent schemes section */
+        .recent-schemes-section {
+            background: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px var(--shadow-color);
+            animation: fadeIn 0.5s ease;
+        }
+
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+        }
+
+        .loading-container p {
+            color: var(--primary-color);
+            font-size: 1.1em;
+        }
+
+        .recent-schemes-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .recent-scheme-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .recent-scheme-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px var(--shadow-color);
+        }
+
+        .scheme-date {
+            color: var(--secondary-color);
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .scheme-source {
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .error-message {
+            color: var(--secondary-color);
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 101, 132, 0.1);
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+
+        /* Update location status styles */
+        .location-status {
+            margin: 20px auto;
+            padding: 15px;
+            border-radius: 8px;
+            max-width: 600px;
+            text-align: center;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            background: var(--card-background);
+            box-shadow: 0 4px 15px var(--shadow-color);
+        }
+
+        .location-status.success {
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--success-color);
+            display: block;
+        }
+
+        .location-status.error {
+            background: rgba(244, 67, 54, 0.1);
+            color: #f44336;
+            display: block;
+        }
+
+        .location-status.loading {
+            background: rgba(33, 150, 243, 0.1);
+            color: #2196f3;
+            display: block;
+        }
+
+        .location-status i {
+            margin-right: 8px;
+        }
+
+        /* Add styles for scheme details */
+        .scheme-details {
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(108, 99, 255, 0.05);
+            border-radius: 8px;
+        }
+
+        .scheme-details p {
+            margin: 8px 0;
+            font-size: 0.95em;
+            line-height: 1.4;
+        }
+
+        .scheme-details strong {
+            color: var(--primary-color);
+        }
+
+        .insurance-card {
+            margin-bottom: 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .insurance-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px var(--shadow-color);
+        }
+
+        .insurance-image {
+            transition: transform 0.3s ease;
+        }
+
+        .insurance-card:hover .insurance-image {
+            transform: scale(1.05);
+        }
+
+        /* Motivational Quotes Section Styles */
+        .quotes-section {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            border-radius: var(--border-radius);
+            padding: 40px;
+            margin: 30px 0;
+            box-shadow: 0 8px 32px var(--shadow-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quotes-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(108, 99, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(108, 99, 255, 0.1) 0%, transparent 50%);
+            animation: pulse 4s infinite alternate;
+        }
+
+        .quotes-section h2 {
+            text-align: center;
+            color: var(--primary-color);
+            font-size: 2.5em;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .quotes-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .quote-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .quote-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .quote-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: var(--primary-color);
+            opacity: 0.2;
+            font-size: 2em;
+            transition: all 0.3s ease;
+        }
+
+        .quote-card:hover .quote-icon {
+            transform: scale(1.2);
+            opacity: 0.3;
+        }
+
+        .quote-text {
+            font-size: 1.2em;
+            line-height: 1.6;
+            color: var(--text-color);
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .quote-author {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .author-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-color);
+        }
+
+        .author-info h4 {
+            color: var(--primary-color);
+            margin: 0;
+            font-size: 1.1em;
+        }
+
+        .author-info p {
+            color: #666;
+            margin: 0;
+            font-size: 0.9em;
+        }
+
+        .quote-decoration {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .quote-card:hover .quote-decoration {
+            transform: scaleX(1);
+        }
+
+        @media (max-width: 768px) {
+            .quotes-section {
+                padding: 20px;
+            }
+
+            .quotes-container {
+                grid-template-columns: 1fr;
+            }
+
+            .quote-card {
+                padding: 20px;
+            }
+
+            .quote-text {
+                font-size: 1.1em;
+            }
+        }
+
+        /* Add animation for quote cards */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .quote-card {
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+        }
+
+        .quote-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .quote-card:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-decoration"></div>
+        <div class="header-content">
+            <h1>Financial Goals</h1>
+            <p>Plan and track your financial goals with personalized insights</p>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <div class="stat-number">₹5L</div>
+                    <div class="stat-label">Average Coverage</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">75+</div>
+                    <div class="stat-label">Districts Covered</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Support Available</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Add New Goal Form -->
+        <div class="add-goal-form">
+            <h2>Add New Goal</h2>
+            <div class="form-group">
+                <label for="goalName">Goal Name</label>
+                <input type="text" id="goalName" placeholder="e.g., Buy a bicycle">
+            </div>
+            <div class="form-group">
+                <label for="targetAmount">Target Amount (₹)</label>
+                <input type="number" id="targetAmount" placeholder="Enter amount">
+            </div>
+            <div class="form-group">
+                <label for="deadline">Target Date</label>
+                <input type="date" id="deadline">
+            </div>
+            <button class="btn" onclick="addNewGoal()">Add Goal</button>
+        </div>
+
+        <!-- Goals List -->
+        <div id="goalsList">
+            <!-- Goals will be added here dynamically -->
+        </div>
+
+        <!-- Remove the state-selection div and replace with a simple status indicator -->
+        <div id="locationStatus" class="location-status"></div>
+
+        <!-- Insurance Section -->
+        <div class="insurance-section">
+            <h2>Health Insurance Information</h2>
+            <div id="insuranceCards">
+                <!-- Default Central Government Schemes -->
+                <div class="insurance-card">
+                    <img src="https://static.bankbazaar.com/images/india/infographic/ayushman-bharat-yojana-PM-health-insurance-scheme.webp" alt="PMJAY Logo" class="insurance-image">
+                    <div class="insurance-content">
+                        <h3>Ayushman Bharat Yojana (PMJAY)</h3>
+                        <p>National health insurance scheme providing coverage up to ₹5 lakh per family per year for secondary and tertiary care hospitalization.</p>
+                        <div class="scheme-details">
+                            <p><strong>Eligibility:</strong> Families included in SECC database, BPL families, and other vulnerable groups</p>
+                            <p><strong>Benefits:</strong> Coverage for pre and post-hospitalization expenses, no restriction on family size</p>
+                            <p><strong>Launch Date:</strong> September 2018</p>
+                        </div>
+                        <a href="https://pmjay.gov.in/" target="_blank" class="btn">Learn More</a>
+                    </div>
+                </div>
+
+                <div class="insurance-card">
+                    <img src="https://www.etmoney.com/learn/wp-content/uploads/2022/09/top-up-health-plan.jpg" alt="CGHS Logo" class="insurance-image">
+                    <div class="insurance-content">
+                        <h3>Central Government Health Scheme (CGHS)</h3>
+                        <p>Comprehensive health care facility for Central Government employees and pensioners, covering both indoor and outdoor treatment.</p>
+                        <div class="scheme-details">
+                            <p><strong>Eligibility:</strong> Central Government employees, pensioners, and their dependents</p>
+                            <p><strong>Benefits:</strong> Cashless treatment, coverage for chronic diseases, and family floater policy</p>
+                            <p><strong>Launch Date:</strong> 1954 (Modernized in 2023)</p>
+                        </div>
+                        <a href="https://cghs.gov.in/" target="_blank" class="btn">Learn More</a>
+                    </div>
+                </div>
+
+                <div class="insurance-card">
+                    <img src="https://www.etmoney.com/learn/wp-content/uploads/2022/09/top-up-health-plan.jpg" alt="ESIC Logo" class="insurance-image">
+                    <div class="insurance-content">
+                        <h3>Employees' State Insurance Corporation (ESIC)</h3>
+                        <p>Social security and health insurance scheme for Indian workers, providing comprehensive medical care and cash benefits.</p>
+                        <div class="scheme-details">
+                            <p><strong>Eligibility:</strong> Employees earning up to ₹21,000 per month in registered establishments</p>
+                            <p><strong>Benefits:</strong> Medical care, sickness benefit, maternity benefit, and disablement benefit</p>
+                            <p><strong>Launch Date:</strong> 1952 (Updated in 2023)</p>
+                        </div>
+                        <a href="https://www.esic.nic.in/" target="_blank" class="btn">Learn More</a>
+                    </div>
+                </div>
+
+                <div class="insurance-card">
+                    <img src="https://www.etmoney.com/learn/wp-content/uploads/2022/09/top-up-health-plan.jpg" alt="PMFBY Logo" class="insurance-image">
+                    <div class="insurance-content">
+                        <h3>Pradhan Mantri Fasal Bima Yojana (PMFBY)</h3>
+                        <p>Comprehensive crop insurance scheme providing financial support to farmers in case of crop failure due to natural calamities.</p>
+                        <div class="scheme-details">
+                            <p><strong>Eligibility:</strong> All farmers growing notified crops</p>
+                            <p><strong>Benefits:</strong> Premium as low as 2% for Kharif crops, 1.5% for Rabi crops</p>
+                            <p><strong>Launch Date:</strong> 2016 (Updated in 2023)</p>
+                        </div>
+                        <a href="https://pmfby.gov.in/" target="_blank" class="btn">Learn More</a>
+                    </div>
+                </div>
+
+                <div class="insurance-card">
+                    <img src="https://www.etmoney.com/learn/wp-content/uploads/2022/09/top-up-health-plan.jpg" alt="PMJJBY Logo" class="insurance-image">
+                    <div class="insurance-content">
+                        <h3>Pradhan Mantri Jeevan Jyoti Bima Yojana (PMJJBY)</h3>
+                        <p>Life insurance scheme offering coverage for natural death and accidental death to bank account holders.</p>
+                        <div class="scheme-details">
+                            <p><strong>Eligibility:</strong> Bank account holders between 18-50 years</p>
+                            <p><strong>Benefits:</strong> ₹2 lakh coverage for just ₹330 per year</p>
+                            <p><strong>Launch Date:</strong> 2015 (Updated in 2023)</p>
+                        </div>
+                        <a href="https://jansuraksha.gov.in/" target="_blank" class="btn">Learn More</a>
+                    </div>
+                </div>
+
+                <!-- Dynamic schemes will be added here -->
+            </div>
+        </div>
+
+        <!-- Housing Schemes Section -->
+        <div class="housing-section">
+            <h2>Housing Schemes</h2>
+            <div class="housing-card">
+                <img src="https://cdnbbsr.s3waas.gov.in/s3e6c2dc3dee4a51dcec3a876aa2339a78/uploads/2024/09/20250129560910463.png" alt="PMAY-G Logo" class="housing-image">
+                <div class="housing-content">
+                    <h3>Pradhan Mantri Awas Yojana - Gramin (PMAY-G)</h3>
+                    <p>Financial assistance for rural housing</p>
+                    <ul class="benefits-list">
+                        <li>Financial assistance of ₹1.20 lakh in plains</li>
+                        <li>₹1.30 lakh in hilly/difficult areas</li>
+                        <li>Additional ₹12,000 for toilet construction</li>
+                        <li>90 days of unskilled wage employment</li>
+                    </ul>
+                    <a href="https://pmayg.nic.in/" target="_blank" class="btn">Learn More</a>
+                </div>
+            </div>
+            <div class="housing-card">
+                <img src="https://cdn.zeebiz.com/sites/default/files/2022/07/21/191045-untitled-design-38.jpg" alt="PMAY-U Logo" class="housing-image">
+                <div class="housing-content">
+                    <h3>Pradhan Mantri Awas Yojana - Urban (PMAY-U)</h3>
+                    <p>Affordable housing for urban poor</p>
+                    <ul class="benefits-list">
+                        <li>Interest subsidy of up to 6.5% on home loans</li>
+                        <li>Benefit of ₹2.67 lakh per house</li>
+                        <li>Credit Linked Subsidy Scheme (CLSS)</li>
+                        <li>In-situ Slum Redevelopment (ISSR)</li>
+                    </ul>
+                    <a href="https://pmaymis.gov.in/" target="_blank" class="btn">Learn More</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tips Section -->
+        <div class="tips-section">
+            <h2>Weekly Tips</h2>
+            <div class="tip-card">
+                <h3>Save Smart</h3>
+                <p>Start with small amounts regularly. Even ₹50 per day can grow significantly over time.</p>
+            </div>
+            <div class="tip-card">
+                <h3>Safe Investments</h3>
+                <p>Consider Post Office Savings, Fixed Deposits, or Government Schemes for safe investments.</p>
+            </div>
+        </div>
+
+        <!-- Success Stories -->
+        <div class="success-stories">
+            <h2>Success Stories</h2>
+            <div class="story-card">
+                <h3>Raju's Bicycle Shop</h3>
+                <p>"Started saving ₹100 daily, now running my own bicycle repair shop!"</p>
+            </div>
+            <div class="story-card">
+                <h3>Meena's Education Fund</h3>
+                <p>"Saved for 2 years, now my daughter is studying in a good school."</p>
+            </div>
+        </div>
+
+        <!-- Motivational Quotes Section -->
+        <div class="quotes-section">
+            <h2>Daily Inspiration</h2>
+            <div class="quotes-container">
+                <div class="quote-card" data-aos="fade-up">
+                    <div class="quote-icon">
+                        <i class="fas fa-quote-left"></i>
+                    </div>
+                    <p class="quote-text">"The only way to do great work is to love what you do."</p>
+                    <div class="quote-author">
+                        <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="Steve Jobs" class="author-image">
+                        <div class="author-info">
+                            <h4>Steve Jobs</h4>
+                            <p>Co-founder of Apple</p>
+                        </div>
+                    </div>
+                    <div class="quote-decoration"></div>
+                </div>
+
+                <div class="quote-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="quote-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="quote-text">"Success is not final, failure is not fatal: it is the courage to continue that counts."</p>
+                    <div class="quote-author">
+                        <img src="https://randomuser.me/api/portraits/women/2.jpg" alt="Winston Churchill" class="author-image">
+                        <div class="author-info">
+                            <h4>Winston Churchill</h4>
+                            <p>Former British Prime Minister</p>
+                        </div>
+                    </div>
+                    <div class="quote-decoration"></div>
+                </div>
+
+                <div class="quote-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="quote-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <p class="quote-text">"The future belongs to those who believe in the beauty of their dreams."</p>
+                    <div class="quote-author">
+                        <img src="https://randomuser.me/api/portraits/women/3.jpg" alt="Eleanor Roosevelt" class="author-image">
+                        <div class="author-info">
+                            <h4>Eleanor Roosevelt</h4>
+                            <p>Former First Lady of the United States</p>
+                        </div>
+                    </div>
+                    <div class="quote-decoration"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let goals = [];
+
+        // Add new goal
+        function addNewGoal() {
+            const goalName = document.getElementById('goalName').value;
+            const targetAmount = parseFloat(document.getElementById('targetAmount').value);
+            const deadline = document.getElementById('deadline').value;
+
+            if (goalName && targetAmount > 0 && deadline) {
+                const newGoal = {
+                    id: Date.now(),
+                    name: goalName,
+                    targetAmount: targetAmount,
+                    currentAmount: 0,
+                    deadline: deadline,
+                    monthlySavings: calculateMonthlySavings(targetAmount, deadline)
+                };
+
+                goals.push(newGoal);
+                updateGoalsList();
+                
+                // Clear form
+                document.getElementById('goalName').value = '';
+                document.getElementById('targetAmount').value = '';
+                document.getElementById('deadline').value = '';
+            }
+        }
+
+        // Calculate monthly savings needed
+        function calculateMonthlySavings(targetAmount, deadline) {
+            const today = new Date();
+            const targetDate = new Date(deadline);
+            const months = (targetDate.getFullYear() - today.getFullYear()) * 12 + 
+                          (targetDate.getMonth() - today.getMonth());
+            return targetAmount / Math.max(months, 1);
+        }
+
+        // Update goals list
+        function updateGoalsList() {
+            const goalsList = document.getElementById('goalsList');
+            goalsList.innerHTML = '';
+
+            goals.forEach(goal => {
+                const progress = (goal.currentAmount / goal.targetAmount) * 100;
+                const goalCard = document.createElement('div');
+                goalCard.className = 'goal-card';
+                goalCard.innerHTML = `
+                    <div class="goal-header">
+                        <h3 class="goal-title">${goal.name}</h3>
+                        <span class="goal-deadline">Target: ${new Date(goal.deadline).toLocaleDateString()}</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress" style="width: ${progress}%"></div>
+                        </div>
+                        <p>₹${goal.currentAmount.toLocaleString()} of ₹${goal.targetAmount.toLocaleString()} saved (${Math.round(progress)}%)</p>
+                    </div>
+                    <div class="savings-info">
+                        <div class="savings-item">
+                            <h4>Monthly Savings Needed</h4>
+                            <p>₹${Math.ceil(goal.monthlySavings).toLocaleString()}</p>
+                        </div>
+                        <div class="savings-item">
+                            <h4>Add Savings</h4>
+                            <input type="number" id="savings-${goal.id}" placeholder="Enter amount">
+                            <button onclick="addSavings(${goal.id})">Add</button>
+                        </div>
+                    </div>
+                `;
+                goalsList.appendChild(goalCard);
+            });
+        }
+
+        // Add savings to a goal
+        function addSavings(goalId) {
+            const amount = parseFloat(document.getElementById(`savings-${goalId}`).value);
+            if (amount > 0) {
+                const goal = goals.find(g => g.id === goalId);
+                if (goal) {
+                    goal.currentAmount += amount;
+                    updateGoalsList();
+                    document.getElementById(`savings-${goalId}`).value = '';
+                }
+            }
+        }
+
+        // City data for each state
+        const stateCities = {
+            'andhra-pradesh': ['Visakhapatnam', 'Vijayawada', 'Guntur', 'Nellore', 'Tirupati'],
+            'arunachal-pradesh': ['Itanagar', 'Naharlagun', 'Pasighat', 'Bomdila', 'Tawang'],
+            'assam': ['Guwahati', 'Silchar', 'Dibrugarh', 'Jorhat', 'Nagaon'],
+            'bihar': ['Patna', 'Gaya', 'Bhagalpur', 'Muzaffarpur', 'Purnia'],
+            'chhattisgarh': ['Raipur', 'Bhilai', 'Bilaspur', 'Korba', 'Raigarh'],
+            'goa': ['Panaji', 'Margao', 'Vasco da Gama', 'Ponda', 'Mapusa'],
+            'gujarat': ['Ahmedabad', 'Surat', 'Vadodara', 'Rajkot', 'Bhavnagar'],
+            'haryana': ['Gurgaon', 'Faridabad', 'Ambala', 'Panipat', 'Rohtak'],
+            'himachal-pradesh': ['Shimla', 'Mandi', 'Kullu', 'Manali', 'Dharamshala'],
+            'jharkhand': ['Ranchi', 'Jamshedpur', 'Dhanbad', 'Bokaro', 'Deoghar'],
+            'karnataka': ['Bangalore', 'Mysore', 'Hubli', 'Mangalore', 'Belgaum'],
+            'kerala': ['Thiruvananthapuram', 'Kochi', 'Kozhikode', 'Thrissur', 'Kollam'],
+            'madhya-pradesh': ['Bhopal', 'Indore', 'Jabalpur', 'Gwalior', 'Ujjain'],
+            'maharashtra': ['Mumbai', 'Pune', 'Nagpur', 'Thane', 'Nashik'],
+            'manipur': ['Imphal', 'Thoubal', 'Bishnupur', 'Churachandpur', 'Ukhrul'],
+            'meghalaya': ['Shillong', 'Tura', 'Jowai', 'Nongstoin', 'Williamnagar'],
+            'mizoram': ['Aizawl', 'Lunglei', 'Saiha', 'Champhai', 'Kolasib'],
+            'nagaland': ['Kohima', 'Dimapur', 'Mokokchung', 'Tuensang', 'Wokha'],
+            'odisha': ['Bhubaneswar', 'Cuttack', 'Rourkela', 'Puri', 'Sambalpur'],
+            'punjab': ['Chandigarh', 'Ludhiana', 'Amritsar', 'Jalandhar', 'Patiala'],
+            'rajasthan': ['Jaipur', 'Jodhpur', 'Kota', 'Bikaner', 'Ajmer'],
+            'sikkim': ['Gangtok', 'Namchi', 'Mangan', 'Gyalshing', 'Lachung'],
+            'tamil-nadu': ['Chennai', 'Coimbatore', 'Madurai', 'Salem', 'Tiruchirappalli'],
+            'telangana': ['Hyderabad', 'Warangal', 'Karimnagar', 'Nizamabad', 'Khammam'],
+            'tripura': ['Agartala', 'Udaipur', 'Dharmanagar', 'Kailasahar', 'Belonia'],
+            'uttar-pradesh': [
+                'Agra', 'Aligarh', 'Ambedkar Nagar', 'Amethi', 'Amroha', 'Auraiya', 'Azamgarh', 
+                'Baghpat', 'Bahraich', 'Ballia', 'Balrampur', 'Banda', 'Barabanki', 'Bareilly', 
+                'Basti', 'Bhadohi', 'Bijnor', 'Budaun', 'Bulandshahr', 'Chandauli', 'Chitrakoot', 
+                'Deoria', 'Etah', 'Etawah', 'Faizabad', 'Farrukhabad', 'Fatehpur', 'Firozabad', 
+                'Gautam Buddha Nagar', 'Ghaziabad', 'Ghazipur', 'Gonda', 'Gorakhpur', 'Hamirpur', 
+                'Hapur', 'Hardoi', 'Hathras', 'Jalaun', 'Jaunpur', 'Jhansi', 'Kannauj', 'Kanpur Dehat', 
+                'Kanpur Nagar', 'Kasganj', 'Kaushambi', 'Kushinagar', 'Lakhimpur Kheri', 'Lalitpur', 
+                'Lucknow', 'Maharajganj', 'Mahoba', 'Mainpuri', 'Mathura', 'Mau', 'Meerut', 
+                'Mirzapur', 'Moradabad', 'Muzaffarnagar', 'Pilibhit', 'Pratapgarh', 'Prayagraj', 
+                'Raebareli', 'Rampur', 'Saharanpur', 'Sambhal', 'Sant Kabir Nagar', 'Shahjahanpur', 
+                'Shamli', 'Shravasti', 'Siddharthnagar', 'Sitapur', 'Sonbhadra', 'Sultanpur', 
+                'Unnao', 'Varanasi'
+            ],
+            'uttarakhand': ['Dehradun', 'Haridwar', 'Rishikesh', 'Haldwani', 'Roorkee'],
+            'west-bengal': ['Kolkata', 'Howrah', 'Asansol', 'Siliguri', 'Durgapur']
+        };
+
+        // Health Insurance Schemes Data
+        const healthInsuranceSchemes = {
+            'uttar-pradesh': {
+                'default': [
+                    {
+                        title: 'Ayushman Bharat Yojana',
+                        description: 'Coverage up to ₹5 lakh per family per year for secondary and tertiary care hospitalization',
+                        link: 'https://pmjay.gov.in/',
+                        image: 'https://static.bankbazaar.com/images/india/infographic/ayushman-bharat-yojana-PM-health-insurance-scheme.webp'
+                    },
+                    {
+                        title: 'UP Health Insurance Scheme',
+                        description: 'State-specific health insurance coverage for BPL families',
+                        link: 'https://up.gov.in/en/web/guest/health',
+                        image: 'https://www.etmoney.com/learn/wp-content/uploads/2022/09/top-up-health-plan.jpg'
+                    }
+                ],
+                'lucknow': [
+                    {
+                        title: 'Lucknow City Health Scheme',
+                        description: 'Special health coverage for Lucknow residents',
+                        link: 'https://up.gov.in/en/web/guest/lucknow-health-scheme',
+                        image: 'https://www.etmoney.com/learn/wp-content/uploads/2022/09/top-up-health-plan.jpg'
+                    }
+                ],
+                'kanpur': [
+                    {
+                        title: 'Kanpur Medical Insurance',
+                        description: 'Healthcare coverage for Kanpur residents',
+                        link: 'https://up.gov.in/en/web/guest/kanpur-health',
+                        image: 'https://www.etmoney.com/learn/wp-content/uploads/2022/09/top-up-health-plan.jpg'
+                    }
+                ]
+            },
+            'maharashtra': {
+                'default': [
+                    {
+                        title: 'Maharashtra Health Insurance Scheme',
+                        description: 'Comprehensive health coverage for Maharashtra residents',
+                        link: 'https://maharashtra.gov.in/health-insurance',
+                        image: 'https://www.etmoney.com/learn/wp-content/uploads/2022/09/top-up-health-plan.jpg'
+                    }
+                ],
+                'mumbai': [
+                    {
+                        title: 'Mumbai City Health Plan',
+                        description: 'Special healthcare benefits for Mumbai residents',
+                        link: 'https://maharashtra.gov.in/mumbai-health',
+                        image: 'https://www.etmoney.com/learn/wp-content/uploads/2022/09/top-up-health-plan.jpg'
+                    }
+                ]
+            }
+            // Add more states and cities as needed
+        };
+
+        // Function to update insurance information
+        function updateInsuranceInfo() {
+            const selectedState = document.getElementById('stateSelect').value;
+            const selectedCity = document.getElementById('citySelect').value;
+            const insuranceCards = document.getElementById('insuranceCards');
+            
+            // Clear existing cards
+            insuranceCards.innerHTML = '';
+            
+            if (selectedState && healthInsuranceSchemes[selectedState]) {
+                const stateSchemes = healthInsuranceSchemes[selectedState];
+                let schemesToShow = [];
+                
+                // Get city-specific schemes if available
+                if (selectedCity && stateSchemes[selectedCity.toLowerCase()]) {
+                    schemesToShow = stateSchemes[selectedCity.toLowerCase()];
+                }
+                
+                // Add default state schemes
+                if (stateSchemes.default) {
+                    schemesToShow = schemesToShow.concat(stateSchemes.default);
+                }
+                
+                // Create cards for each scheme
+                schemesToShow.forEach(scheme => {
+                    const card = document.createElement('div');
+                    card.className = 'insurance-card';
+                    card.innerHTML = `
+                        <img src="${scheme.image}" alt="${scheme.title}" class="insurance-image">
+                        <div class="insurance-content">
+                            <h3>${scheme.title}</h3>
+                            <p>${scheme.description}</p>
+                            <a href="${scheme.link}" target="_blank" class="btn">Learn More</a>
+                        </div>
+                    `;
+                    insuranceCards.appendChild(card);
+                });
+            } else {
+                // Show default PMJAY card if no state selected
+                const defaultCard = document.createElement('div');
+                defaultCard.className = 'insurance-card';
+                defaultCard.innerHTML = `
+                    <img src="https://static.bankbazaar.com/images/india/infographic/ayushman-bharat-yojana-PM-health-insurance-scheme.webp" alt="PMJAY Logo" class="insurance-image">
+                    <div class="insurance-content">
+                        <h3>Ayushman Bharat Yojana (PMJAY)</h3>
+                        <p>National health insurance scheme covering up to ₹5 lakh per family per year</p>
+                        <a href="https://pmjay.gov.in/" target="_blank" class="btn">Learn More</a>
+                    </div>
+                `;
+                insuranceCards.appendChild(defaultCard);
+            }
+        }
+
+        // Update insurance info when state or city changes
+        document.getElementById('stateSelect').addEventListener('change', function() {
+            const selectedState = this.value;
+            const citySelectContainer = document.getElementById('citySelectContainer');
+            const citySelect = document.getElementById('citySelect');
+            
+            // Clear existing city options
+            citySelect.innerHTML = '<option value="">Select your city</option>';
+            
+            if (selectedState) {
+                // Show city dropdown and populate cities
+                citySelectContainer.style.display = 'block';
+                const cities = stateCities[selectedState] || [];
+                cities.forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city.toLowerCase();
+                    option.textContent = city;
+                    citySelect.appendChild(option);
+                });
+
+                // Fetch recent schemes for the selected state
+                const stateName = selectedState.split('-').map(word => 
+                    word.charAt(0).toUpperCase() + word.slice(1)
+                ).join(' ');
+                fetchRecentSchemes(stateName);
+            } else {
+                // Hide city dropdown if no state selected
+                citySelectContainer.style.display = 'none';
+            }
+            
+            // Update insurance information and location-based schemes
+            updateInsuranceInfo();
+            updateLocationAndSchemes();
+        });
+
+        document.getElementById('citySelect').addEventListener('change', function() {
+            updateInsuranceInfo();
+            updateLocationAndSchemes();
+        });
+
+        // Initial insurance info update
+        updateInsuranceInfo();
+
+        // Add location-based schemes data
+        const middleClassSchemes = {
+            'uttar-pradesh': {
+                'lucknow': [
+                    {
+                        title: 'Lucknow Middle Class Housing Scheme',
+                        description: 'Affordable housing for middle-class families',
+                        eligibility: 'Income between ₹3-6 lakhs per annum',
+                        benefits: 'Up to ₹2.67 lakh interest subsidy',
+                        link: 'https://up.gov.in/lucknow-housing'
+                    },
+                    {
+                        title: 'Lucknow Education Loan Scheme',
+                        description: 'Special education loans for middle-class students',
+                        eligibility: 'Family income below ₹8 lakhs per annum',
+                        benefits: 'Interest rates starting from 7.5%',
+                        link: 'https://up.gov.in/education-loan'
+                    }
+                ],
+                'kanpur': [
+                    {
+                        title: 'Kanpur Business Loan Scheme',
+                        description: 'Small business loans for middle-class entrepreneurs',
+                        eligibility: 'Business turnover below ₹1 crore',
+                        benefits: 'Up to ₹10 lakhs with low interest rates',
+                        link: 'https://up.gov.in/kanpur-business'
+                    }
+                ]
+            },
+            'maharashtra': {
+                'mumbai': [
+                    {
+                        title: 'Mumbai Middle Class Housing Scheme',
+                        description: 'Affordable housing in Mumbai metropolitan area',
+                        eligibility: 'Income between ₹5-10 lakhs per annum',
+                        benefits: 'Up to ₹3 lakhs subsidy',
+                        link: 'https://maharashtra.gov.in/mumbai-housing'
+                    }
+                ]
+            }
+        };
+
+        // Function to update location and schemes
+        function updateLocationAndSchemes() {
+            const selectedState = document.getElementById('stateSelect').value;
+            const selectedCity = document.getElementById('citySelect').value;
+            const currentLocation = document.getElementById('currentLocation');
+            const schemesList = document.getElementById('schemesList');
+
+            // Update current location display
+            currentLocation.textContent = selectedCity ? 
+                `${selectedCity.charAt(0).toUpperCase() + selectedCity.slice(1)}, ${selectedState.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}` :
+                'Please select your location';
+
+            // Clear existing schemes
+            schemesList.innerHTML = '';
+
+            // Get and display relevant schemes
+            if (selectedState && selectedCity && middleClassSchemes[selectedState] && middleClassSchemes[selectedState][selectedCity.toLowerCase()]) {
+                const schemes = middleClassSchemes[selectedState][selectedCity.toLowerCase()];
+                schemes.forEach(scheme => {
+                    const schemeCard = document.createElement('div');
+                    schemeCard.className = 'scheme-card';
+                    schemeCard.innerHTML = `
+                        <h3 class="scheme-title">${scheme.title}</h3>
+                        <p>${scheme.description}</p>
+                        <div class="scheme-details">
+                            <p><strong>Eligibility:</strong> ${scheme.eligibility}</p>
+                            <p><strong>Benefits:</strong> ${scheme.benefits}</p>
+                        </div>
+                        <a href="${scheme.link}" target="_blank" class="scheme-link">Learn More →</a>
+                    `;
+                    schemesList.appendChild(schemeCard);
+                });
+            } else {
+                schemesList.innerHTML = '<p>No specific schemes available for your location. Please check general schemes above.</p>';
+            }
+        }
+
+        // Add Gemini API configuration
+        const GEMINI_API_KEY = 'YOUR_GEMINI_API_KEY'; // Replace with your actual API key
+        const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+
+        // Function to fetch recent schemes using Gemini API
+        async function fetchRecentSchemes(state) {
+            const loadingContainer = document.getElementById('schemesLoading');
+            const recentSchemesList = document.getElementById('recentSchemesList');
+            
+            try {
+                loadingContainer.style.display = 'flex';
+                recentSchemesList.innerHTML = '';
+
+                const prompt = `Find the 3 most recent government schemes and financial programs for middle-class families in ${state} state, India. Include scheme name, launch date, eligibility criteria, and benefits. Format as JSON.`;
+
+                const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: prompt
+                            }]
+                        }]
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.candidates && data.candidates[0].content.parts[0].text) {
+                    const schemes = JSON.parse(data.candidates[0].content.parts[0].text);
+                    
+                    schemes.forEach(scheme => {
+                        const schemeCard = document.createElement('div');
+                        schemeCard.className = 'recent-scheme-card';
+                        schemeCard.innerHTML = `
+                            <div class="scheme-date">Launched: ${scheme.launchDate}</div>
+                            <h3 class="scheme-title">${scheme.name}</h3>
+                            <p>${scheme.description}</p>
+                            <div class="scheme-details">
+                                <p><strong>Eligibility:</strong> ${scheme.eligibility}</p>
+                                <p><strong>Benefits:</strong> ${scheme.benefits}</p>
+                            </div>
+                            <div class="scheme-source">Source: ${scheme.source}</div>
+                        `;
+                        recentSchemesList.appendChild(schemeCard);
+                    });
+                } else {
+                    throw new Error('Invalid response format');
+                }
+            } catch (error) {
+                recentSchemesList.innerHTML = `
+                    <div class="error-message">
+                        <p>Unable to fetch recent schemes. Please try again later.</p>
+                        <p>Error: ${error.message}</p>
+                    </div>
+                `;
+            } finally {
+                loadingContainer.style.display = 'none';
+            }
+        }
+
+        // Add Google Places Autocomplete
+        let autocomplete;
+        let placeSearch;
+        let map;
+
+        function initAutocomplete() {
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.id = 'locationSearch';
+            input.placeholder = 'Search for your location';
+            input.className = 'state-dropdown';
+            
+            const citySelectContainer = document.getElementById('citySelectContainer');
+            citySelectContainer.parentNode.insertBefore(input, citySelectContainer.nextSibling);
+
+            autocomplete = new google.maps.places.Autocomplete(input, {
+                types: ['(cities)'],
+                componentRestrictions: { country: 'in' }
+            });
+
+            autocomplete.addListener('place_changed', function() {
+                const place = autocomplete.getPlace();
+                if (place.geometry) {
+                    const addressComponents = place.address_components;
+                    let state = '';
+                    let city = '';
+
+                    for (const component of addressComponents) {
+                        if (component.types.includes('administrative_area_level_1')) {
+                            state = component.long_name.toLowerCase().replace(/\s+/g, '-');
+                        }
+                        if (component.types.includes('locality')) {
+                            city = component.long_name;
+                        }
+                    }
+
+                    if (state && city) {
+                        document.getElementById('stateSelect').value = state;
+                        const citySelect = document.getElementById('citySelect');
+                        citySelect.value = city.toLowerCase();
+                        updateInsuranceInfo();
+                        updateLocationAndSchemes();
+                        searchGovernmentSchemes(place.formatted_address);
+                    }
+                }
+            });
+        }
+
+        // Add automatic location tracking on page load
+        window.onload = function() {
+            initAutocomplete();
+            // Automatically start location tracking
+            setTimeout(() => {
+                trackUserLocation();
+            }, 1000); // Small delay to ensure all components are loaded
+        };
+
+        // Update the location tracking function
+        function trackUserLocation() {
+            const locationStatus = document.getElementById('locationStatus');
+            locationStatus.className = 'location-status loading';
+            locationStatus.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Getting your location...';
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    async (position) => {
+                        try {
+                            const { latitude, longitude } = position.coords;
+                            const response = await fetch(
+                                `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=AIzaSyCC-Q01AQxm7bAvKmNKRIB8uR3OYXdfVao`
+                            );
+                            const data = await response.json();
+
+                            if (data.results && data.results[0]) {
+                                const addressComponents = data.results[0].address_components;
+                                let state = '';
+                                let city = '';
+
+                                for (const component of addressComponents) {
+                                    if (component.types.includes('administrative_area_level_1')) {
+                                        state = component.long_name.toLowerCase().replace(/\s+/g, '-');
+                                    }
+                                    if (component.types.includes('locality')) {
+                                        city = component.long_name;
+                                    }
+                                }
+
+                                if (state && city) {
+                                    // Show success message
+                                    locationStatus.className = 'location-status success';
+                                    locationStatus.innerHTML = `<i class="fas fa-check-circle"></i> Finding schemes in ${city}, ${state.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}`;
+                                    
+                                    // Search for schemes
+                                    searchGovernmentSchemes(data.results[0].formatted_address);
+                                } else {
+                                    throw new Error('Could not determine city and state from location');
+                                }
+                            }
+                        } catch (error) {
+                            locationStatus.className = 'location-status error';
+                            locationStatus.innerHTML = `<i class="fas fa-exclamation-circle"></i> Error getting location details. Please try again.`;
+                            console.error('Location tracking error:', error);
+                        }
+                    },
+                    (error) => {
+                        locationStatus.className = 'location-status error';
+                        switch(error.code) {
+                            case error.PERMISSION_DENIED:
+                                locationStatus.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please allow location access to find schemes in your area.';
+                                break;
+                            case error.POSITION_UNAVAILABLE:
+                                locationStatus.innerHTML = '<i class="fas fa-exclamation-circle"></i> Location information is unavailable.';
+                                break;
+                            case error.TIMEOUT:
+                                locationStatus.innerHTML = '<i class="fas fa-exclamation-circle"></i> Location request timed out.';
+                                break;
+                            default:
+                                locationStatus.innerHTML = `<i class="fas fa-exclamation-circle"></i> Error: ${error.message}`;
+                        }
+                        console.error('Geolocation error:', error);
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    }
+                );
+            } else {
+                locationStatus.className = 'location-status error';
+                locationStatus.innerHTML = '<i class="fas fa-exclamation-circle"></i> Geolocation is not supported by your browser';
+            }
+        }
+
+        // Enhanced scheme search function
+        async function searchGovernmentSchemes(location) {
+            const insuranceCards = document.getElementById('insuranceCards');
+            insuranceCards.innerHTML = `
+                <div class="loading-container">
+                    <div class="loading"></div>
+                    <p>Searching for schemes in your area...</p>
+                </div>
+            `;
+
+            try {
+                const prompt = `Find the most recent government health insurance schemes and financial programs available in ${location}, India. Include scheme name, eligibility criteria, benefits, and official website. Format as JSON array. Focus on schemes launched in the last 2 years.`;
+
+                const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=AIzaSyCC-Q01AQxm7bAvKmNKRIB8uR3OYXdfVao', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: prompt
+                            }]
+                        }]
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.candidates && data.candidates[0].content.parts[0].text) {
+                    const schemes = JSON.parse(data.candidates[0].content.parts[0].text);
+                    insuranceCards.innerHTML = '';
+
+                    if (schemes.length === 0) {
+                        insuranceCards.innerHTML = `
+                            <div class="info-message">
+                                <p>No specific schemes found for your location. Showing general schemes instead.</p>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    schemes.forEach(scheme => {
+                        const card = document.createElement('div');
+                        card.className = 'insurance-card';
+                        card.innerHTML = `
+                            <img src="${scheme.image || 'https://www.etmoney.com/learn/wp-content/uploads/2022/09/top-up-health-plan.jpg'}" alt="${scheme.title}" class="insurance-image">
+                            <div class="insurance-content">
+                                <h3>${scheme.name}</h3>
+                                <p>${scheme.description}</p>
+                                <div class="scheme-details">
+                                    <p><strong>Eligibility:</strong> ${scheme.eligibility}</p>
+                                    <p><strong>Benefits:</strong> ${scheme.benefits}</p>
+                                    ${scheme.launchDate ? `<p><strong>Launch Date:</strong> ${scheme.launchDate}</p>` : ''}
+                                </div>
+                                <a href="${scheme.website}" target="_blank" class="btn">Learn More</a>
+                                <a href="${scheme.source}" target="_blank" class="scheme-source-link">Source</a>
+                            </div>
+                        `;
+                        insuranceCards.appendChild(card);
+                    });
+                }
+            } catch (error) {
+                insuranceCards.innerHTML = `
+                    <div class="error-message">
+                        <p>Unable to fetch schemes. Please try again later.</p>
+                        <p>Error: ${error.message}</p>
+                    </div>
+                `;
+                console.error('Scheme search error:', error);
+            }
+        }
+
+        // Add styles for new messages
+        const style = document.createElement('style');
+        style.textContent = `
+            .info-message {
+                background: rgba(33, 150, 243, 0.1);
+                color: #2196f3;
+                padding: 15px;
+                border-radius: 8px;
+                margin: 10px 0;
+                text-align: center;
+            }
+
+            .loading-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+                padding: 20px;
+            }
+
+            .loading-container p {
+                color: var(--primary-color);
+                font-size: 1.1em;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+    
+<!-- 🌟 Floating Chat Button -->
+<button class="chat-button" onclick="toggleChat()">💬</button>
+
+<!-- 🌟 Chat Popup -->
+<div class="chat-popup" id="chatPopup">
+  <div class="chat-header">Ask Me Anything 🤖</div>
+  <div class="chat-body" id="chatBody">
+    <div class="chat-message bot">Hi! I'm Atharv's assistant. How can I help you?</div>
+  </div>
+  <div class="chat-input">
+    <input type="text" id="chatInput" placeholder="Type a message..." />
+    <button onclick="sendMessage()">➤</button>
+  </div>
+</div>
+
+<!-- 🌟 Gemini Chatbot Script -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const chatPopup = document.getElementById("chatPopup");
+    const chatBody = document.getElementById("chatBody");
+    const chatInput = document.getElementById("chatInput");
+
+    window.toggleChat = function () {
+      chatPopup.style.display = chatPopup.style.display === "flex" ? "none" : "flex";
+    };
+
+    window.sendMessage = async function () {
+      const userMessage = chatInput.value.trim();
+      if (!userMessage) return;
+
+      appendMessage("user", userMessage);
+      chatInput.value = "";
+      appendMessage("bot", "Thinking...");
+
+      try {
+        const reply = await getGeminiReply(userMessage);
+        const botMsgs = chatBody.querySelectorAll(".chat-message.bot");
+        botMsgs[botMsgs.length - 1].remove();
+        appendMessage("bot", reply);
+      } catch (err) {
+        appendMessage("bot", "Error fetching response 😞");
+      }
+    };
+
+    chatInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") sendMessage();
+    });
+
+    function appendMessage(sender, text) {
+      const msgDiv = document.createElement("div");
+      msgDiv.className = `chat-message ${sender}`;
+      msgDiv.textContent = text;
+      chatBody.appendChild(msgDiv);
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    async function getGeminiReply(message) {
+      const apiKey = "AIzaSyCC-Q01AQxm7bAvKmNKRIB8uR3OYXdfVao";
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [
+              {
+                role: "user",
+                parts: [{ text: message }],
+              },
+            ],
+          }),
+        }
+      );
+      const data = await res.json();
+      return data?.candidates?.[0]?.content?.parts?.[0]?.text || "No response.";
+    }
+  });
+</script>
+
+<!-- 🌟 Styles (you can also place this in your styles.css) -->
+<style>
+  .chat-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #10a37f;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    font-size: 28px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    z-index: 9999;
+  }
+
+  .chat-popup {
+    display: none;
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 320px;
+    max-height: 500px;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .chat-header {
+    background-color: #10a37f;
+    color: white;
+    padding: 12px;
+    font-weight: bold;
+    text-align: center;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+  }
+
+  .chat-body {
+    padding: 10px;
+    flex: 1;
+    overflow-y: auto;
+    font-size: 14px;
+  }
+
+  .chat-message {
+    margin: 6px 0;
+    padding: 8px 10px;
+    border-radius: 10px;
+    max-width: 80%;
+  }
+
+  .chat-message.user {
+    background-color: #e0e0e0;
+    align-self: flex-end;
+    text-align: right;
+  }
+
+  .chat-message.bot {
+    background-color: #d6f5ee;
+    align-self: flex-start;
+    text-align: left;
+  }
+
+  .chat-input {
+    display: flex;
+    border-top: 1px solid #ccc;
+  }
+
+  .chat-input input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    outline: none;
+    font-size: 14px;
+  }
+
+  .chat-input button {
+    padding: 10px 15px;
+    background-color: #10a37f;
+    border: none;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .chat-input button:hover {
+    background-color: #0e8e6a;
+  }
+</style>
+</body>
+</html> 
